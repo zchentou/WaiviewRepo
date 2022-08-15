@@ -1,0 +1,274 @@
+{% load pages_extras %}
+<!DOCTYPE html>
+<!-- lang? -->
+<html lang="en">
+<!-- head only contains title and metadata(data about data that is not displayed, info on html document) -->
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+
+    <style>
+    /* current */
+      .bg-navy {
+        /* from primary color the #007bff is */
+        background: linear-gradient(to bottom, #003377 0%, #007bff 100%);
+        /*background: #85DCEB*/
+        /*background: linear-gradient(to bottom, #659DBD 0%, #85DCEB 100%);*/
+        /*background: #659DBD*/
+        /*background: #41B3A3*/
+        /*background: #86C232*/
+        /*background: #61892f*/
+        /*background: linear-gradient(to bottom, #0000ff 0%, #00ccff 100%);*/
+      }
+
+      .bg-second-navy-fade {
+        background: linear-gradient(to bottom, #4da3ff 0%, #80bdff 100%);
+      }
+
+      .bg-third-navy-fade {
+        background: #003377
+      }
+
+      .bg-navy-light {
+        /*background: linear-gradient(to bottom, #659DBD 0%, #85DCEB 100%);*/
+        background: #85DCEB
+        /*background: #41B3A3*/
+      }
+
+      .bg-navy-try {
+        /*background: linear-gradient(to bottom, #659DBD 0%, #85DCEB 100%);*/
+        background: #007bff
+        /*background: #41B3A3*/
+      }
+
+
+      .bg-beige {
+        background: #F5F5DC
+        /* background: #6495ED */
+      }
+      .bg-sky-blue {
+        background: #6495ED
+      }
+
+      .bg-beige-fade {
+        background: linear-gradient(to bottom, #FFFFFF 0%,  #F5F5DC 100%);
+        /* background: #6495ED */
+      }
+
+      .bg-beige-light {
+        background: #FFF5DC
+        /* background: #6495ED */
+      }
+
+      .text_color_green {
+        color: #90EE90
+      }
+
+      .dropdown-menu {
+        /* removed stuff important! */
+      width: 800px;
+      height: 200px;
+      }
+
+      .for-profile-pics {
+        max-width: 200px;
+        max-height: 200px;
+      }
+
+      .for-story-profile-pics {
+        max-width: 35px;
+        max-height: 35px;
+      }
+
+      .for-story-detail-pics {
+        max-width: 500px;
+        max-height: 500px;
+      }
+
+      .card-columns {
+        column-gap: 0rem;
+      }
+
+      .text-light-blue-fade {
+        background: -webkit-linear-gradient(#FFFFFF, #ccffff);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+    </style>
+
+
+    <title>HumanityUnited</title>
+
+  </head>
+
+  <body class=''>
+    <!-- <header class="bg-white text-primary"> -->
+    <header class="bg-navy">
+      <div class="container p-1">
+        <h1 class='text-light-blue-fade'>Frontwave</h1>
+        <!-- <nav class="navbar navbar-expand-md rounded bg-navy-light"> -->
+        <div class="container p-1">
+          <h3 style="font-family:cursive" class='text-light-blue-fade'> {{ request|daily_quote_text }}
+          {% if request|daily_quote_storyid %}
+            {% if request|story_object_from_daily_quote_anonymous %}
+              -Anonymous User (from story <a href="{% url 'story-detail' request|daily_quote_storyid %}" class='text-light-blue-fade'>{{ request|story_object_from_daily_quote_title }}</a>)
+            {% else %}
+              - <a href="{% url 'profile' request|story_object_from_daily_quote_name %}" class='text-light-blue-fade'>{{ request|story_object_from_daily_quote_name }}</a><span class='text-light-blue-fade'> (from story </span>  <a href="{% url 'story-detail' request|daily_quote_storyid %}" class='text-light-blue-fade'>{{ request|story_object_from_daily_quote_title }} </a>)</h3>
+            {% endif %}
+          {% else %}
+          {% endif %}
+        </div>
+
+        <!-- stickytop -->
+        <nav class="navbar navbar-dark navbar-expand-md rounded bg-primary">
+          <!-- mr-auto will apply to next stuff after the ul -->
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSamller" aria-controls="navbarSmaller" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse mr-auto" id='navbarSmaller'>
+            <ul class="navbar-nav">
+              <li class="nav-item">
+                {% if request|am_home %}
+                  <a class="nav-link active" href="{% url 'home' %}">Home</a>
+                {% else %}
+                  <a class="nav-link" href="{% url 'home' %}">Home</a>
+                {% endif %}
+              </li>
+              <li class="nav-item">
+                <!-- better than tag, stays active throughout website if looking at a story -->
+                {% if 'stories' in request.path and 'profiles' not in request.path %}
+                  <a class="nav-link active" href="{% url 'story-list' %}">Stories</a>
+                {% else %}
+                  <a class="nav-link" href="{% url 'story-list' %}">Stories</a>
+                {% endif %}
+              </li>
+              <li class="nav-item">
+                {% if 'images' in request.path and 'profiles' not in request.path %}
+                  <a class="nav-link active" href="{% url 'photo-list' %}">Images</a>
+                {% else %}
+                  <a class="nav-link" href="{% url 'photo-list' %}">Images</a>
+                {% endif %}
+              </li>
+              <li class="nav-item">
+                {% if 'links' in request.path and 'profiles' not in request.path %}
+                  <a class="nav-link active" href="{% url 'link-list' %}">Resources</a>
+                {% else %}
+                  <a class="nav-link" href="{% url 'link-list' %}">Resources</a>
+                {% endif %}
+              </li>
+              <li class="nav-item">
+                {% if request|am_about_us %}
+                  <a class="nav-link active" href="{% url 'about' %}">About Us</a>
+                {% else %}
+                  <a class="nav-link" href="{% url 'about' %}">About Us</a>
+                {% endif %}
+              </li>
+              <li class="nav-item">
+                {% if request|am_contact_us %}
+                  <a class="nav-link active" href="{% url 'contact' %}">Contact Us</a>
+                {% else %}
+                  <a class="nav-link" href="{% url 'contact' %}">Contact Us</a>
+                {% endif %}
+              </li>
+            </ul>
+          </div>
+          <ul class="navbar-nav">
+            {% if user.is_authenticated %}
+              <li class="nav-item dropdown">
+                {% if request|am_post %}
+                  <a class="nav-link active dropdown-toggle" href ='#' id='dropdownMenuLink' role='button' data-toggle='dropdown'>Post</a>
+                {% else %}
+                  <a class="nav-link dropdown-toggle" href ='#' id='dropdownMenuLink' role='button' data-toggle='dropdown'>Post</a>
+                {% endif %}
+
+                  <!-- needed to add w-100, now works perfectly -->
+                  <div class="dropdown-menu w-100 bg-primary">
+                    <a class='dropdown-item' style='color: #FFFFFF' href="{% url 'story-create' %}">A Story</a>
+                    <a class='dropdown-item' style='color: #FFFFFF' href="{% url 'photo-create' %}">An Image</a>
+                    <a class='dropdown-item' style='color: #FFFFFF' href="{% url 'link-create' %}">A Resource/Link</a>
+                  </div>
+                <!-- <a class="nav-link" style='color:#FFFFFF' href="{% url 'story-create' %}">New Story</a> -->
+              </li>
+              <li class="nav-item">
+                {% if request.user.username in request.path %}
+                  <a class="nav-link active" href="{% url 'profile' user.username %}">Profile</a>
+                {% else %}
+                  <a class="nav-link" href="{% url 'profile' user.username %}">Profile</a>
+                {% endif %}
+              </li>
+              <li class="nav-item">
+                {% if request|am_account_logout %}
+                  <a class="nav-link active" href="{% url 'account_logout' %}">Logout</a>
+                {% else %}
+                  <a class="nav-link" href="{% url 'account_logout' %}">Logout</a>
+                {% endif %}
+              </li>
+              {% else %}
+                <li class="nav-item">
+                {% if request|am_account_login %}
+                  <a class="nav-link active" href="{% url 'account_login' %}">Login</a>
+                {% else %}
+                  <a class="nav-link" href="{% url 'account_login' %}">Login</a>
+                {% endif %}
+                </li>
+                <li class="nav-item">
+                  {% if request|am_account_signup %}
+                    <a class="nav-link active" href="{% url 'account_signup' %}">Create New Account</a>
+                  {% else %}
+                    <a class="nav-link" href="{% url 'account_signup' %}">Create New Account</a>
+                  {% endif %}
+                </li>
+              {% endif %}
+          </ul>
+      </div>
+
+      <!-- quote first, then nav-bar? -->
+    </header>
+
+    <!-- I think role is only for user to read -->
+    <main class="container pt-4">
+      <!-- makes sure everything is lined up -->
+      <!-- <div class="row pt-4"> -->
+
+        <!-- <div class="col-md-3">
+           //if not defined, style="width: 18rem;">, then fills up entire column
+          <div class="card">
+            <div class="card-header">
+              Our Issues
+            </div>
+            <ul class='list-group list-group-flush'>
+              <li class="list-group-item"><a href="#">#COVID-19</a></li>
+              <li class="list-group-item"><a href="#">#BlackLivesMatter</a></li>
+            </ul>
+          </div>
+        </div> -->
+
+        <!-- <div class="col md-9"> -->
+        {% if messages %}
+          {% for each in messages %}
+            <div class="alert alert-{{ each.tags }}">
+              {{ each }}
+            </div>
+          {% endfor %}
+        {% endif %}
+        {% block content %}
+        replace
+        {% endblock %}
+        <!-- </div> -->
+
+      <!-- </div> -->
+    </main>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+  </body>
+
+</html>

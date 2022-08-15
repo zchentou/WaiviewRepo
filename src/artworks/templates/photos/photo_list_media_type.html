@@ -1,0 +1,283 @@
+{% extends 'base.html' %}
+{% load stories_extras %}
+{% load profiles_extras %}
+{% load artworks_extras %}
+{% load pages_extras %}
+{% block content %}
+
+<div class="alert alert-info alert-dismissible fade show" role="alert">
+  {% media_type_in_url request as media_type_second %}
+  Click on a {{ media_type_second }} to see the full post including the title, caption, comments, and replies.
+  <button type="button" class="close" data-dismiss="alert" aria-label='Dismiss Tag'>
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+
+<div class="container d-none d-sm-none d-md-block">
+  <div class="d-flex flex-row-reverse">
+    <form class="form-inline justify-right mb-2" method='GET' action='.'>
+      {% if request.GET.search_bar %}
+        <input id='search_bar' class="form-control mr-2" type="search" name='search_bar' placeholder="Search Images/Videos..." value='Searched for: {{ request.GET.search_bar }}' >
+      {% else %}
+        <input id='search_bar' class="form-control mr-2" type="search" name='search_bar' placeholder="Search Images/Videos..." >
+      {% endif %}
+      <button class="btn btn-success dropdown-toggle" type="button" data-toggle='dropdown'>Search</button>
+      <div class="dropdown-menu w-25">
+        <button name='type_of_search' class='dropdown-item' type='submit' value='everything'>Everything</button>
+        <button name='type_of_search' class='dropdown-item' type='submit' value='title'>By Title</button>
+        <button name='type_of_search' class='dropdown-item' type='submit' value='picture_caption'>By Caption</button>
+        <button name='type_of_search' class='dropdown-item' type='submit' value='author'>By User</button>
+        <button name='type_of_search' class='dropdown-item' type='submit' value='tags'>By Tag</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="d-md-none">
+  <form class="form-inline mb-2" method='GET' action='.'>
+    {% if request.GET.search_bar %}
+      <input id='search_bar' class="form-control w-50 mr-2" type="search" name='search_bar' placeholder="Search Images/Videos..." value='Searched for: {{ request.GET.search_bar }}' >
+    {% else %}
+      <input id='search_bar' class="form-control w-50 mr-2" type="search" name='search_bar' placeholder="Search Images/Videos..." >
+    {% endif %}
+    <button class="btn btn-success dropdown-toggle" type="button" data-toggle='dropdown'>Search</button>
+    <div class="dropdown-menu w-25">
+      <button name='type_of_search' class='dropdown-item' type='submit' value='everything'>Everything</button>
+      <button name='type_of_search' class='dropdown-item' type='submit' value='title'>By Title</button>
+      <button name='type_of_search' class='dropdown-item' type='submit' value='picture_caption'>By Caption</button>
+      <button name='type_of_search' class='dropdown-item' type='submit' value='author'>By User</button>
+      <button name='type_of_search' class='dropdown-item' type='submit' value='tags'>By Tag</button>
+    </div>
+  </form>
+</div>
+
+
+<div class="row mb-2">
+  <div class="col-md-3">
+    <div class="btn-group" role='group' aria-label='ButtonGroup'>
+      {% if request|media_type_equal_to_picture %}
+        <a type="button" href='.' class="btn btn-outline-secondary active">Images</a>
+        <a type="button" href='{{ request.path }}../video/' class="btn btn-outline-secondary">Videos</a>
+        <a type="button" href='{{ request.path }}../' class="btn btn-outline-secondary">Both</a>
+      {% else %}
+        <a type="button" href='{{ request.path }}../picture/' class="btn btn-outline-secondary">Images</a>
+        <a type="button" href='.' class="btn btn-outline-secondary active">Videos</a>
+        <a type="button" href='{{ request.path }}../' class="btn btn-outline-secondary">Both</a>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="container d-md-none">
+    <div class="card m-2">
+      <div class="card-header bg-primary">
+        <h5 class='text-white mt-1 mb-0'>
+          Topics
+          <button class="float-right btn-primary" name="button" data-target='#topicsPhotosIndividual' data-toggle='collapse' aria-expanded="true" aria-controls="topicsIndividual">
+            &darr;
+          </button>
+        </h5>
+      </div>
+      <div id="topicsPhotosIndividual" class="collapse" aria-labelledby="photosindividual">
+        <ul class='list-group list-group-flush'>
+          {% media_type_in_url request as media_type %}
+          {% if request|has_multiple_topics %}
+            <li class="list-group-item active"><a href="{% url 'photo-list-media_type' media_type %}" class='text-light'>All Topics</a></li>
+          {% else %}
+            <li class="list-group-item"><a href="{% url 'photo-list-media_type' media_type %}" class='text-primary'>All Topics</a></li>
+          {% endif %}
+          {% for topic in request|all_topics %}
+            {% if request|only_topic:topic.name %}
+              <li class="list-group-item active"><a href="{% url 'photo-topic-media_type' topic media_type %}" class='text-white'>{{ topic.name }}</a></li>
+            {% else %}
+              <li class="list-group-item"><a href="{% url 'photo-topic-media_type' topic media_type %}" class='text-primary'>{{ topic.name }}</a></li>
+            {% endif %}
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-9">
+    <div class="container">
+      <nav class='navbar navbar-dark bg-primary navbar-expand-md rounded mb-1'>
+        <div class="d-md-none">
+          <a class="navbar-brand" href="#">Categories</a>
+        </div>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarPhotoIndividualList" aria-controls="navbarPhotoIndividualList" aria-expanded="false" aria-label="IndividualPhotos">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id='navbarPhotoIndividualList'>
+          <div class="navbar-nav mr-auto">
+            {% if request|has_multiple_topics %}
+              {% photo_mediatype_check_everything request as the_url %}
+              {% if request.path == the_url %}
+                <a class="nav-item nav-link active" href="{{ the_url }}">All</a>
+              {% else %}
+                <a class="nav-item nav-link" href="{{ the_url }}">All</a>
+              {% endif %}
+              {% for type in request|all_types %}
+                {% photo_mediatype_check_type_all_topics_url request type.name as the_url %}
+                {% if request.path == the_url %}
+                  <a class="nav-item nav-link active" href="{{ the_url }}">{{ type.name }}</a>
+                {% else %}
+                  <a class="nav-item nav-link" href="{{ the_url }}">{{ type.name }}</a>
+                {% endif %}
+              {% endfor %}
+            {% endif %}
+
+            {% for topic in request|all_topics %}
+              {% if request|only_topic:topic.name %}
+                {% photo_mediatype_check_topic_all_types_url request topic.name as the_url %}
+                {% if request.path == the_url %}
+                  <a class="nav-item nav-link active" href="{{ the_url }}">All</a>
+                {% else %}
+                  <a class="nav-item nav-link" href="{{ the_url }}">All</a>
+                {% endif %}
+                {% for type in topic|return_all_types_for_topic %}
+                  {% photo_mediatype_check_topic_type_url request topic.name type.name as the_url %}
+                  {% if request.path == the_url %}
+                    <a class="nav-item nav-link active" href="{{ the_url }}">{{ type.name }}</a>
+                  {% else %}
+                    <a class="nav-item nav-link" href="{{ the_url }}">{{ type.name }}</a>
+                  {% endif %}
+                {% endfor %}
+              {% endif %}
+            {% endfor %}
+          </div>
+        </div>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+
+<div class='container'>
+  <div class="row">
+    <div class="col-md-3">
+      <div class="row">
+        <div class="card mb-5 w-100 d-none d-sm-none d-md-block mr-2">
+          <div class="card-header">
+            Topics
+          </div>
+          <ul class='list-group list-group-flush'>
+            {% media_type_in_url request as media_type %}
+            {% if request|has_multiple_topics %}
+              <li class="list-group-item active"><a href="{% url 'photo-list-media_type' media_type %}" class='text-light'>All Topics</a></li>
+            {% else %}
+              <li class="list-group-item"><a href="{% url 'photo-list-media_type' media_type %}" class='text-primary'>All Topics</a></li>
+            {% endif %}
+            {% for topic in request|all_topics %}
+              {% if request|only_topic:topic.name %}
+                <li class="list-group-item active"><a href="{% url 'photo-topic-media_type' topic media_type %}" class='text-white'>{{ topic.name }}</a></li>
+              {% else %}
+                <li class="list-group-item"><a href="{% url 'photo-topic-media_type' topic media_type %}" class='text-primary'>{{ topic.name }}</a></li>
+              {% endif %}
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+      <div class="row">
+        <div class="card mb-5 w-100 d-none d-sm-none d-md-block mr-2">
+          <div class="card-header">
+            Share today
+          </div>
+          <ul class='list-group list-group-flush'>
+            <li class="list-group-item"><a href="{% url 'story-create' %}">Post a story</a></li>
+            <li class="list-group-item"><a href="{% url 'photo-create' %}">Post an image/video</a></li>
+            <li class="list-group-item"><a href="{% url 'link-create' %}">Share a resource</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="row">
+        <div class="card d-none d-sm-none d-md-block mr-2">
+          <div class="card-header">
+            Resources and Links to Support
+          </div>
+          <ul class='list-group list-group-flush'>
+            <li class="list-group-item"><a href="{% url 'home' %}">Check out our home page with an overview!</a></li>
+            <li class="list-group-item"><a href="{% url 'link-list' 'date' %}">Check out categorized and detailed resources submitted by others!</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-9">
+      <div class="card-columns">
+        {% for object in object_list %}
+          {% if object.picture %}
+            <div class="card m-0">
+              <a href="{{ object.get_absolute_url }}"><img src="{{ object.picture.url }}" class='card-img rounded' alt="Card image"></a>
+              {% if request.user == object.name %}
+                <a class="btn btn-sm btn-outline-danger" href="{% url 'photo-delete' object.id %}">Delete</a>
+                <a class="btn btn-sm btn-outline-info" href="{% url 'photo-update' object.id %}">Update</a>
+              {% endif %}
+            </div>
+          {% endif %}
+
+          {% if object.video %}
+            <div class="card m-0">
+              <a href="{{ object.get_absolute_url }}">
+                <video class='card-img' controls>
+                  <source src="{{ object.video.url }}" type="video/mp4">
+                </video>
+              </a>
+              {% if request.user == object.name %}
+                <a class="btn btn-sm btn-outline-danger" href="{% url 'photo-delete' object.id %}">Delete</a>
+                <a class="btn btn-sm btn-outline-info" href="{% url 'photo-update' object.id %}">Update</a>
+              {% endif %}
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+{% if not request|a_search %}
+  {% if is_paginated %}
+    <div class="row">
+      <div class="col-md-3">
+      </div>
+      <div class="col-md-9">
+        <ul class='pagination'>
+          <!-- 1 -->
+          {% if page_obj.has_previous %}
+            <li class='page-item'><a class ='page-link' href="?page={{ page_obj.previous_page_number }}">Previous</a></li>
+          {% else %}
+            <li class='page-item disabled'><a class ='page-link' href="#">Previous</a></li>
+          {% endif %}
+
+          {% if page_obj.number >= 5 %}
+            <li class='page-item'><a class ='page-link' href="?page={{ 1 }}">1</a></li>
+          {% endif %}
+
+
+          {% for num in page_obj.paginator.page_range %}
+            {% if page_obj.number == num %}
+              <li class='page-item active'><a class ='page-link' href="?page={{ num }}">{{ num }}</a></li>
+            {% elif num >= page_obj.number|add:'-3' and num <= page_obj.number|add:'3' %}
+              {% if num == page_obj.number|add:'-3' and num != 2 and num != 1 %}
+                <li class='page-item'><a class ='page-link' href="?page={{ num|add:'1'|divide:2 }}">...</a></li>
+              {% elif num == page_obj.number|add:'3' and num != page_obj.paginator.num_pages|add:'-1'  and num != page_obj.paginator.num_pages %}
+                <li class='page-item'><a class ='page-link' href="?page={{ num|add:page_obj.paginator.num_pages|divide:2 }}">...</a></li>
+              {% else %}
+                <li class='page-item'><a class ='page-link' href="?page={{ num }}">{{ num }}</a></li>
+              {% endif %}
+            {% endif %}
+          {% endfor %}
+
+          {% if page_obj.number <= page_obj.paginator.num_pages|add:'-4' %}
+            <li class='page-item'><a class ='page-link' href="?page={{ page_obj.paginator.num_pages }}">{{ page_obj.paginator.num_pages }}</a></li>
+          {% endif %}
+
+          {% if page_obj.has_next %}
+            <li class='page-item'><a class ='page-link' href="?page={{ page_obj.next_page_number }}">Next</a></li>
+          {% else %}
+            <li class='page-item disabled'><a class ='page-link' href="#">Next</a></li>
+          {% endif %}
+        </ul>
+      </div>
+    </div>
+  {% endif %}
+{% endif %}
+{% endblock %}

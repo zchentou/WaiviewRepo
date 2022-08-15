@@ -1,0 +1,222 @@
+{% extends 'base.html' %}
+<!-- {% load stories_extras %} -->
+{% load profiles_extras %}
+{% load artworks_extras %}
+{% block content %}
+
+<!-- used for testing {{ request.path }}
+{{ request.get_full_path }} -->
+<div class="container">
+  <div class="d-flex flex-row-reverse">
+    <!-- HOW DOES THIS WORK WITHOUT THE ACTION IN QUOTES? -->
+    <form class="form-inline justify-right mb-2" method='GET' action=".">
+      <!-- ok? -->
+      {% if request.GET.search_bar %}
+        <input id='search_bar' class="form-control mr-2" type="search" name='search_bar' placeholder="Search Links..." value='Searched for: {{ request.GET.search_bar }}' >
+      {% else %}
+        <input id='search_bar' class="form-control mr-2" type="search" name='search_bar' placeholder="Search Links..." >
+      {% endif %}
+      <button class="btn btn-success dropdown-toggle" type="button" data-toggle='dropdown'>Search</button>
+      <div class="dropdown-menu w-25">
+        <button name='type_of_search' class='dropdown-item' type='submit' value='everything'>Everything</button>
+        <button name='type_of_search' class='dropdown-item' type='submit' value='title'>By Title</button>
+        <button name='type_of_search' class='dropdown-item' type='submit' value='description'>By Description</button>
+        <button name='type_of_search' class='dropdown-item' type='submit' value='author'>By User</button>
+        <button name='type_of_search' class='dropdown-item' type='submit' value='tags'>By Tag</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+
+<div class="row mb-2">
+  <div class="col-md-3">
+    <div class="container-fluid">
+      <form class="" method='GET' action='.'>
+        <div class="dropdown w-100">
+          <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="dropdownFilter" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Order of Resources:
+          </button>
+          <div class="dropdown-menu w-25" aria-labelledby="dropdownMenuButton">
+            <!-- different wording? -->
+            <!-- do . and request.path do same thing? -->
+            {% if request|search_is_alphabetical %}
+              <button class="dropdown-item" type='submit' name='list_order' value='date'>Most Recent</button>
+              <button class="dropdown-item active" type='submit' name='list_order' value='alphabetical'>Alphabetical</button>
+              <!-- default and by date click -->
+            {% else %}
+              <button class="dropdown-item active" type='submit' name='list_order' value='date'>Most Recent</button>
+              <button class="dropdown-item" type='submit' name='list_order' value='alphabetical'>Alphabetical</button>
+            {% endif %}
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div class="col-md-9">
+    <div class="container">
+      <nav class='navbar navbar-dark bg-primary navbar-expand-md rounded'>
+        <div class="navbar-nav mr-auto">
+          {% if request|has_multiple_topics %}
+            {% link_check_everything as the_url %}
+            {% if request.path == the_url %}
+              <a class="nav-item nav-link active" href="{{ the_url }}">All</a>
+            {% else %}
+              <a class="nav-item nav-link" href="{{ the_url }}">All</a>
+            {% endif %}
+            {% for type in request|all_types %}
+            <!-- here, since on all, what all types  -->
+              {% link_check_type_all_topics_url type.name as the_url %}
+              {% if request.path == the_url %}
+                <a class="nav-item nav-link active" href="{{ the_url }}">{{ type.name }}</a>
+              {% else %}
+                <a class="nav-item nav-link" href="{{ the_url }}">{{ type.name }}</a>
+              {% endif %}
+            {% endfor %}
+          {% endif %}
+
+          {% for topic in request|all_topics %}
+            {% if request|only_topic:topic.name %}
+              <!-- should not be all types, should just check if the types associated with the topic-->
+              <!-- actually this should be fine, if just a topic, will still be all, type doesn't matter here -->
+              {% link_check_topic_all_types_url topic.name as the_url %}
+              {% if request.path == the_url %}
+                <a class="nav-item nav-link active" href="{{ the_url }}">All</a>
+              {% else %}
+                <a class="nav-item nav-link" href="{{ the_url }}">All</a>
+              {% endif %}
+              <!-- should not be all types, should just be the types associated with the topic-->
+              {% for type in topic|return_all_types_for_topic %}
+                {% link_check_topic_type_url topic.name type.name as the_url %}
+                {% if request.path == the_url %}
+                  <a class="nav-item nav-link active" href="{{ the_url }}">{{ type.name }}</a>
+                {% else %}
+                  <a class="nav-item nav-link" href="{{ the_url }}">{{ type.name }}</a>
+                {% endif %}
+              {% endfor %}
+            {% endif %}
+          {% endfor %}
+        </div>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+
+<div class='container'>
+  <!-- green -->
+  <div class="row">
+    <!-- blue -->
+    <div class="col-md-3">
+      <!-- NO CONTAINER OK???? -->
+      <!-- orange -->
+      <div class="row">
+        <div class="card mb-5 w-100">
+          <div class="card-header">
+            Our Topics
+          </div>
+          <ul class='list-group list-group-flush'>
+            <!-- All Topic -->
+            {% if request|has_multiple_topics %}
+              <li class="list-group-item active"><a href="{% url 'link-list' %}" class='text-light'>All Topics</a></li>
+            {% else %}
+              <li class="list-group-item"><a href="{% url 'link-list' %}" class='text-primary'>All Topics</a></li>
+            {% endif %}
+            <!-- Each Topic -->
+            {% for topic in request|all_topics %}
+              {% if request|only_topic:topic.name %}
+                <li class="list-group-item active"><a href="{% url 'link-topic' topic %}" class='text-white'>{{ topic.name }}</a></li>
+              {% else %}
+                <li class="list-group-item"><a href="{% url 'link-topic' topic %}" class='text-primary'>{{ topic.name }}</a></li>
+              {% endif %}
+            {% endfor %}
+          </ul>
+        </div>
+        <!-- orange -->
+      </div>
+      <!-- orange -->
+      <div class="row">
+        <div class="card mb-5 w-100">
+          <div class="card-header">
+            Share today
+          </div>
+          <ul class='list-group list-group-flush'>
+            <li class="list-group-item"><a href="{% url 'story-create' %}">Post a story</a></li>
+            <li class="list-group-item"><a href="{% url 'photo-create' %}">Post an image</a></li>
+            <li class="list-group-item"><a href="{% url 'link-create' %}">Share a resource like these</a></li>
+          </ul>
+        </div>
+        <!-- orange -->
+      </div>
+      <!-- blue -->
+    </div>
+
+      <!-- purple -->
+    <div class="col-md-9">
+      <!-- works somewhat right now, could also try using card decks and card groups, what is the second thing used for? -->
+      <!-- VERSION 2 -->
+        <!-- pink -->
+        <div class="jumbotron">
+          <h1 class='display-4 ml-2'>Resources:</h1>
+          <hr>
+          <ul>
+            {% for object in object_list %}
+              <li>
+                <p class='lead'>
+                  <a href="{{ object.link_to_resource }}">
+                    <strong>
+                      {{ object.title }}
+                    </strong>
+                  </a>
+                  {% if object.description %}
+                    - {{ object.description|truncatechars:200 }}
+                  {% endif %}
+                  <span class='card-text text-muted'><small>...see this post fully</small> <a href="{{ object.get_absolute_url }}"><small>here</small></a></span>
+                </p>
+              </li>
+            {% endfor %}
+          </ul>
+          <a class="btn btn-outline-primary ml-2 mt-2" href="{% url 'link-create' %}" role="button">Share a resource with others</a>
+          <!-- pink -->
+        </div>
+      <!-- purple -->
+    </div>
+    <!-- green -->
+  </div>
+  <!-- container -->
+</div>
+<!-- removed search thing that was not needed, still in photo-list -->
+{% if is_paginated %}
+  <div class="row">
+    <div class="col-md-3">
+    </div>
+    <div class="col-md-9">
+      <ul class='pagination'>
+        {% if page_obj.has_previous %}
+          {% if page_obj.number != 2 %}
+            <li class='page-item'><a class ='page-link' href="?page=1">First</a></li>
+            <!-- <li class='page-item'><a class ='page-link' href="?page= {{ page_obj.previous_page_number }}">Previous</a></li> -->
+          {% endif %}
+        {% endif %}
+        {% for num in page_obj.paginator.page_range %}
+          {% if page_obj.number == num %}
+            <li class='page-item active'><a class ='page-link' href="?page={{ num }}">{{ num }}</a></li>
+          <!-- this is messing stuff up -->
+          {% elif num > page_obj.number|add:'-2' and not num > page_obj.number|add:'1' %}
+            <li class='page-item'><a class ='page-link' href="?page={{ num }}">{{ num }}</a></li>
+          {% endif %}
+        {% endfor %}
+
+        {% if page_obj.has_next %}
+          {% if page_obj.number != page_obj.paginator.num_pages|add:'-1' %}
+            <!-- <li class='page-item'><a class ='page-link' href="?page={{ page_obj.next_page_number }}">Next</a></li> -->
+            <li class='page-item'><a class ='page-link' href="?page={{ page_obj.paginator.num_pages }}">Last</a></li>
+          {% endif %}
+        {% endif %}
+      </ul>
+    </div>
+  </div>
+{% endif %}
+
+{% endblock %}

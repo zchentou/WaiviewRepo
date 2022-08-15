@@ -1,0 +1,318 @@
+{% extends 'base.html' %}
+{% load stories_extras %}
+{% load profiles_extras %}
+{% load artworks_extras %}
+{% load pages_extras %}
+{% block content %}
+
+<div class="container d-none d-sm-none d-md-block">
+  <div class="d-flex flex-row-reverse">
+    <form class="form-inline justify-right mb-2" method='GET' action=".">
+      {% if request.GET.search_bar %}
+        <input id='search_bar' class="form-control mr-2" type="search" name='search_bar' placeholder="Search Links..." value='Searched for: {{ request.GET.search_bar }}' >
+      {% else %}
+        <input id='search_bar' class="form-control mr-2" type="search" name='search_bar' placeholder="Search Links..." >
+      {% endif %}
+      <button class="btn btn-success dropdown-toggle" type="button" data-toggle='dropdown'>Search</button>
+      <div class="dropdown-menu w-25">
+        <button name='type_of_search' class='dropdown-item' type='submit' value='everything'>Everything</button>
+        <button name='type_of_search' class='dropdown-item' type='submit' value='title'>By Title</button>
+        <button name='type_of_search' class='dropdown-item' type='submit' value='description'>By Description</button>
+        <button name='type_of_search' class='dropdown-item' type='submit' value='author'>By User</button>
+        <button name='type_of_search' class='dropdown-item' type='submit' value='tags'>By Tag</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="d-md-none">
+  <form class="form-inline mb-2" method='GET' action='.'>
+    {% if request.GET.search_bar %}
+      <input id='search_bar' class="form-control w-50 mr-2" type="search" name='search_bar' placeholder="Search Stories..." value='Searched for: {{ request.GET.search_bar }}' >
+    {% else %}
+      <input id='search_bar' class="form-control w-50 mr-2" type="search" name='search_bar' placeholder="Search Stories..." >
+    {% endif %}
+    <button class="btn btn-success dropdown-toggle" type="button" data-toggle='dropdown'>Search</button>
+    <div class="dropdown-menu w-25">
+      <button name='type_of_search' class='dropdown-item' type='submit' value='everything'>Everything</button>
+      <button name='type_of_search' class='dropdown-item' type='submit' value='title'>By Title</button>
+      <button name='type_of_search' class='dropdown-item' type='submit' value='content_text'>By Content</button>
+      <button name='type_of_search' class='dropdown-item' type='submit' value='name'>By User</button>
+      <button name='type_of_search' class='dropdown-item' type='submit' value='tags'>By Tag</button>
+    </div>
+  </form>
+</div>
+
+
+<div class="row mb-2">
+  <div class="col-md-3">
+    <div class="container p-0">
+        <div class="dropdown w-100">
+          <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="dropdownFilter" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Order of Resources:
+          </button>
+          <div class="dropdown-menu w-25" aria-labelledby="dropdownMenuButton">
+            {% if order_type == 'alphabetical' %}
+              <a class="dropdown-item" href='{{ request.path }}../date/'>Most Recent</a>
+              <a class="dropdown-item active" href='.'>Alphabetical</a>
+              <a class="dropdown-item" href='{{ request.path }}../state/'>By State/Territory</a>
+            {% elif order_type == 'date' %}
+              <a class="dropdown-item active" href='.'>Most Recent</a>
+              <a class="dropdown-item" href='{{ request.path }}../alphabetical/'>Alphabetical</a>
+              <a class="dropdown-item" href='{{ request.path }}../state/'>By State/Territory</a>
+            {% else %}
+              <a class="dropdown-item" href='{{ request.path }}../date/'>Most Recent</a>
+              <a class="dropdown-item" href='{{ request.path }}../alphabetical/'>Alphabetical</a>
+              <a class="dropdown-item active" href='.'>By State/Territory</a>
+            {% endif %}
+          </div>
+        </div>
+    </div>
+  </div>
+
+  <div class="container d-md-none">
+    <div class="card m-2">
+      <div class="card-header bg-primary">
+        <h5 class='text-white mt-1 mb-0'>
+          Topics
+          <button class="float-right btn-primary" name="button" data-target='#topicsLinks' data-toggle='collapse' aria-expanded="true" aria-controls="topicsLinks">
+            &darr;
+          </button>
+        </h5>
+      </div>
+      <div id="topicsLinks" class="collapse" aria-labelledby="links" >
+        <ul class='list-group list-group-flush'>
+          {% if request|has_multiple_topics %}
+            <li class="list-group-item active"><a href="{% url 'link-list' order_type %}" class='text-light'>All Topics</a></li>
+          {% else %}
+            <li class="list-group-item"><a href="{% url 'link-list' order_type %}" class='text-primary'>All Topics</a></li>
+          {% endif %}
+          {% for topic in request|all_topics %}
+            {% if request|only_topic:topic.name %}
+              <li class="list-group-item active"><a href="{% url 'link-topic' topic order_type %}" class='text-white'>{{ topic.name }}</a></li>
+            {% else %}
+              <li class="list-group-item"><a href="{% url 'link-topic' topic order_type %}" class='text-primary'>{{ topic.name }}</a></li>
+            {% endif %}
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-9">
+    <div class="container-fluid">
+      <nav class='navbar navbar-dark bg-primary navbar-expand-md rounded'>
+        <div class="d-md-none">
+          <a class="navbar-brand" href="#">Categories</a>
+        </div>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarLinkList" aria-controls="navbarLinkList" aria-expanded="false" aria-label="Links">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id='navbarLinkList'>
+          <div class="navbar-nav mr-auto">
+            {% if request|has_multiple_topics %}
+              {% link_check_everything order_type as the_url %}
+              {% if request.path == the_url %}
+                <a class="nav-item nav-link active" href="{{ the_url }}">All</a>
+              {% else %}
+                <a class="nav-item nav-link" href="{{ the_url }}">All</a>
+              {% endif %}
+              {% for type in request|all_types %}
+                {% link_check_type_all_topics_url type.name order_type as the_url %}
+                {% if request.path == the_url %}
+                  <a class="nav-item nav-link active" href="{{ the_url }}">{{ type.name }}</a>
+                {% else %}
+                  <a class="nav-item nav-link" href="{{ the_url }}">{{ type.name }}</a>
+                {% endif %}
+              {% endfor %}
+            {% endif %}
+
+            {% for topic in request|all_topics %}
+              {% if request|only_topic:topic.name %}
+                {% link_check_topic_all_types_url topic.name order_type as the_url %}
+                {% if request.path == the_url %}
+                  <a class="nav-item nav-link active" href="{{ the_url }}">All</a>
+                {% else %}
+                  <a class="nav-item nav-link" href="{{ the_url }}">All</a>
+                {% endif %}
+                {% for type in topic|return_all_types_for_topic %}
+                  {% link_check_topic_type_url topic.name type.name order_type as the_url %}
+                  {% if request.path == the_url %}
+                    <a class="nav-item nav-link active" href="{{ the_url }}">{{ type.name }}</a>
+                  {% else %}
+                    <a class="nav-item nav-link" href="{{ the_url }}">{{ type.name }}</a>
+                  {% endif %}
+                {% endfor %}
+              {% endif %}
+            {% endfor %}
+          </div>
+        </div>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+
+<div class='container'>
+  <div class="row">
+    <div class="col-md-3">
+      <div class="row d-none d-sm-none d-md-block">
+        <div class="card mb-5 w-100">
+          <div class="card-header">
+            Topics
+          </div>
+          <ul class='list-group list-group-flush'>
+            {% if request|has_multiple_topics %}
+              <li class="list-group-item active"><a href="{% url 'link-list' order_type %}" class='text-light'>All Topics</a></li>
+            {% else %}
+              <li class="list-group-item"><a href="{% url 'link-list' order_type %}" class='text-primary'>All Topics</a></li>
+            {% endif %}
+            {% for topic in request|all_topics %}
+              {% if request|only_topic:topic.name %}
+                <li class="list-group-item active"><a href="{% url 'link-topic' topic order_type %}" class='text-white'>{{ topic.name }}</a></li>
+              {% else %}
+                <li class="list-group-item"><a href="{% url 'link-topic' topic order_type %}" class='text-primary'>{{ topic.name }}</a></li>
+              {% endif %}
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+      <div class="row">
+        <div class="card mb-5 w-100 d-none d-sm-none d-md-block">
+          <div class="card-header">
+            Share today
+          </div>
+          <ul class='list-group list-group-flush'>
+            <li class="list-group-item"><a href="{% url 'story-create' %}">Post a story</a></li>
+            <li class="list-group-item"><a href="{% url 'photo-create' %}">Post an image</a></li>
+            <li class="list-group-item"><a href="{% url 'link-create' %}">Share a resource like these</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-9">
+      <div class="jumbotron">
+        <h1 class='display-4 ml-2'>Resources:</h1>
+        <hr>
+        {% if request|am_state %}
+        {% if object_list|has_some_no_states %}
+          <h4>Resources not specific to a state/territory: </h4>
+          <hr>
+          <ul>
+            {% for object in object_list %}
+              {% if not object.states_choices %}
+                <li>
+                  <p class='lead'>
+                    <a href="{{ object.link_to_resource }}">
+                      <strong>
+                        {{ object.title }}
+                      </strong>
+                    </a>
+                    {% if object.description %}
+                      - {{ object.description|truncatechars:200 }}
+                    {% endif %}
+                    <span class='card-text text-muted'><small>...see this post fully</small> <a href="{{ object.get_absolute_url }}"><small>here</small></a> <small>(shared {{ object.date_created }})</small></span>
+                  </p>
+                </li>
+              {% endif %}
+            {% endfor %}
+          </ul>
+        {% endif %}
+          {% for state in object_list|all_states_with_data %}
+            <h4>{{ state }}:</h4>
+            <hr>
+            <ul>
+              {% for object in object_list %}
+                {% if object.states_choices == state %}
+                  <li>
+                    <p class='lead'>
+                      <a href="{{ object.link_to_resource }}">
+                        <strong>
+                          {{ object.title }}
+                        </strong>
+                      </a>
+                      {% if object.description %}
+                        - {{ object.description|truncatechars:200 }}
+                      {% endif %}
+                      <span class='card-text text-muted'><small>...see this post fully</small> <a href="{{ object.get_absolute_url }}"><small>here</small></a> <small>(shared {{ object.date_created }})</small></span>
+                    </p>
+                  </li>
+                {% endif %}
+              {% endfor %}
+            </ul>
+          {% endfor %}
+        {% else %}
+        <ul>
+          {% for object in object_list %}
+            <li>
+              <p class='lead'>
+                <a href="{{ object.link_to_resource }}">
+                  <strong>
+                    {{ object.title }}
+                  </strong>
+                </a>
+                {% if object.description %}
+                  - {{ object.description|truncatechars:200 }}
+                {% endif %}
+                <span class='card-text text-muted'><small>...see this post fully</small> <a href="{{ object.get_absolute_url }}"><small>here</small></a> <small>(shared {{ object.date_created }})</small></span>
+              </p>
+            </li>
+          {% endfor %}
+        </ul>
+        {% endif %}
+        <a class="btn btn-outline-primary ml-2 mt-2" href="{% url 'link-create' %}" role="button">Share a resource with others</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% if not request|a_search %}
+  {% if is_paginated %}
+    <div class="row">
+      <div class="col-md-3">
+      </div>
+      <div class="col-md-9">
+        <ul class='pagination'>
+          {% if page_obj.has_previous %}
+            <li class='page-item'><a class ='page-link' href="?page={{ page_obj.previous_page_number }}">Previous</a></li>
+          {% else %}
+            <li class='page-item disabled'><a class ='page-link' href="#">Previous</a></li>
+          {% endif %}
+
+          {% if page_obj.number >= 5 %}
+            <li class='page-item'><a class ='page-link' href="?page={{ 1 }}">1</a></li>
+          {% endif %}
+
+
+          {% for num in page_obj.paginator.page_range %}
+            {% if page_obj.number == num %}
+              <li class='page-item active'><a class ='page-link' href="?page={{ num }}">{{ num }}</a></li>
+            {% elif num >= page_obj.number|add:'-3' and num <= page_obj.number|add:'3' %}
+              {% if num == page_obj.number|add:'-3' and num != 2 and num != 1 %}
+                <li class='page-item'><a class ='page-link' href="?page={{ num|add:'1'|divide:2 }}">...</a></li>
+              {% elif num == page_obj.number|add:'3' and num != page_obj.paginator.num_pages|add:'-1'  and num != page_obj.paginator.num_pages %}
+                <li class='page-item'><a class ='page-link' href="?page={{ num|add:page_obj.paginator.num_pages|divide:2 }}">...</a></li>
+              {% else %}
+                <li class='page-item'><a class ='page-link' href="?page={{ num }}">{{ num }}</a></li>
+              {% endif %}
+            {% endif %}
+          {% endfor %}
+
+          {% if page_obj.number <= page_obj.paginator.num_pages|add:'-4' %}
+            <li class='page-item'><a class ='page-link' href="?page={{ page_obj.paginator.num_pages }}">{{ page_obj.paginator.num_pages }}</a></li>
+          {% endif %}
+
+          {% if page_obj.has_next %}
+            <li class='page-item'><a class ='page-link' href="?page={{ page_obj.next_page_number }}">Next</a></li>
+          {% else %}
+            <li class='page-item disabled'><a class ='page-link' href="#">Next</a></li>
+          {% endif %}
+        </ul>
+      </div>
+    </div>
+  {% endif %}
+{% endif %}
+
+{% endblock %}

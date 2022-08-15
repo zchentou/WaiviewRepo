@@ -1,0 +1,391 @@
+{% extends 'base.html' %}
+{% load stories_extras %}
+{% block content %}
+<div class='container bg-beige-fade'>
+  {% if username == request.user %}
+    <h3>Your Posts</h3>
+  {% else %}
+    <h3>Posts from {{ username }}</h3>
+  <div class="row">
+    <div class="col-md-3">
+      <div class="card">
+        <div class="card-header">
+          Our Issues
+        </div>
+        <ul class='list-group list-group-flush'>
+          {% if object_list|filter_covid_exists and object_list|filter_blm_exists %}
+            <li class="list-group-item"><a href="{% url 'story-covid' %}" class='text-primary'>#COVID-19</a></li>
+            <li class="list-group-item"><a href="{% url 'story-BLM' %}" class='text-primary' >#BlackLivesMatter</a></li>
+          {% elif object_list|filter_covid_exists %}
+            <li class="list-group-item active"><a href="{% url 'story-covid' %}" class='text-light'>#COVID-19</a></li>
+            <li class="list-group-item"><a href="{% url 'story-BLM' %}" class='text-primary' >#BlackLivesMatter</a></li>
+          {% else %}
+            <li class="list-group-item"><a href="{% url 'story-covid' %}" class='text-primary'>#COVID-19</a></li>
+            <li class="list-group-item active"><a href="{% url 'story-BLM' %}" class='text-light' >#BlackLivesMatter</a></li>
+          {% endif %}
+        </ul>
+      </div>
+    </div>
+
+    <div class="col md-9">
+        {% if object_list.0 %}
+        <div class='card mb-4'>
+          <div class="card-body">
+            <h4 class='card-title'><a href={{ object_list.0.get_absolute_url }}>{{ object_list.0.title }}</a></h4>
+            {% if object_list.0.anonymous %}
+              <h5 class='card-subtitle text-muted'>Anonymous User</h5>
+            {% else %}
+              <h5 class='card-subtitle text-muted'>{{ object_list.0.name }}</h5>
+            {% endif %}
+            <p class='card-text'>{{ object_list.0.content_text }}</p>
+            <p class='card-text text-muted'>Posted: {{ object_list.0.date_created }} - (Updated: {{ object_list.0.last_updated }})</p>
+          </div>
+        </div>
+        {% endif %}
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-3">
+      <div class="card">
+        <div class="card-header">
+          Links to support!
+        </div>
+        <ul class='list-group list-group-flush'>
+          <li class="list-group-item"><a href="#">Link 1</a></li>
+          <li class="list-group-item"><a href="#">Link 2</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="col md-9">
+      {% for object in object_list %}
+        {% if object != object_list.0 %}
+          <div class='card mb-4'>
+            <!-- NEED TO CHANGE! -->
+            <div class="card-body">
+              <h4 class='card-title'><a href={{ object.get_absolute_url }}>{{ object.title }}</a></h4>
+              {% if object.anonymous %}
+                <h5 class='card-subtitle text-muted'>Anonymous User</h5>
+              {% else %}
+                <h5 class='card-subtitle text-muted'>{{ object.name }}</h5>
+              {% endif %}
+              <!-- change to display less! -->
+              <p class='card-text'>{{ object.content_text }}</p>
+              <p class='card-text text-muted'>Posted: {{ object.date_created }} - (Updated: {{ object.last_updated }})</p>
+            </div>
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+
+<!-- ORIGINAL CARDS in STORIES, FOR SURE WORKS -->
+<!-- <div class="card-body">
+  <h4 class='card-title'><a href={{ object.get_absolute_url }}>{{ object.title }}</a></h4>
+  {% if object.anonymous %}
+    <h5 class='card-subtitle text-muted'>Anonymous User<img src="/media/incognito.png/" class='rounded-circle for-story-profile-pics ml-2'></h5>
+  {% else %}
+    <h5 class='card-subtitle text-muted'><a href="{% url 'profile' object.name %}" class='text-muted'>{{ object.name }}</a><img src="{{ object|get_profile_pic_url_from_story }}" class='rounded-circle for-story-profile-pics ml-2'></h5>
+  {% endif %}
+  <div class='card-text'>{{ object.content_text }}</div>
+  <div class='card-text text-muted'><small>Posted: {{ object.date_created }} - (Updated: {{ object.last_updated }})</small></div>
+  {% if object|num_comments_from_story == 1 %}
+    <p class='text-muted'>{{ object|num_comments_from_story }} comment</p>
+  {% else %}
+    <p class='text-muted'><small>{{ object|num_comments_from_story }} comments</small></p>
+  {% endif %}
+  {% if request.user == object.name %}
+    <a class="btn btn-sm btn-outline-danger" href="{% url 'story-delete' object.id %}">Delete</a>
+    <a class="btn btn-sm btn-outline-info" href="{% url 'story-update' object.id %}">Update</a>
+  {% endif %}
+  <button class='btn btn-sm btn-outline-secondary' disabled>Share This By Copying <a href={{ object.get_absolute_url }}>Link!</a></button>
+</div> -->
+
+<!-- THIS ONE TOO, JUST A LITTLE BIT BETTER FORMATTING -->
+<!-- <div class='card mb-4'>
+  <div class="card-body">
+    <h4 class='card-title'><a href={{ object.get_absolute_url }}>{{ object.title }}</a></h4>
+    {% if object.anonymous %}
+      <h5 class='card-subtitle text-muted'>Anonymous User<img src="/media/incognito.png/" class='rounded-circle for-story-profile-pics ml-2'></h5>
+    {% else %}
+      <h5 class='card-subtitle text-muted'><a href="{% url 'profile' object.name %}" class='text-muted'>{{ object.name }}</a><img src="{{ object|get_profile_pic_url_from_story }}" class='rounded-circle for-story-profile-pics ml-2'></h5>
+    {% endif %}
+    <div class='card-text'>{{ object.content_text }}</div>
+    <div class='card-text text-muted'><small>Posted: {{ object.date_created }} - (Updated: {{ object.last_updated }})</small></div>
+    {% if object|num_comments_from_story == 1 %}
+      <div class='text-muted d-flex'>
+        <div class='mr-auto p-2'><small>{{ object|num_comments_from_story }} comment</small></div>
+        <div class='p-2'><small>Topic: {{ object.issue_to_write_about }}, Category: {{ object.category_to_write_about }}, Tags: {{ object.tags }}</small></div>
+      </div>
+    {% else %}
+      <div class='text-muted d-flex'>
+        <div class='mr-auto p-2'><small>{{ object|num_comments_from_story }} comments</small></div>
+        <div class='p-2'><small>Topic: {{ object.issue_to_write_about }}, Category: {{ object.category_to_write_about }}, Tags: {{ object.tags }}</small></div>
+      </div>
+    {% endif %}
+    {% if request.user == object.name %}
+      <a class="btn btn-sm btn-outline-danger" href="{% url 'story-delete' object.id %}">Delete</a>
+      <a class="btn btn-sm btn-outline-info" href="{% url 'story-update' object.id %}">Update</a>
+    {% endif %}
+    <button class='btn btn-sm btn-outline-secondary' disabled>Share This By Copying <a href={{ object.get_absolute_url }}>Link!</a></button>
+  </div> -->
+<!-- going to use this, pink, wasn't using it before, can always remove them -->
+  <!-- <div class="row"> would need w-100 in card then, and margin left-->
+
+
+
+<!-- ANOTHER THAT WORKS REALLY WELL, THIS TIME ADDED PICTURES -->
+<div class='card mb-4'>
+  <div class="card-header">
+    {% if object.anonymous %}
+      <span class='text-muted'>Anonymous User</span><img src="/media/incognito.png/" class='rounded-circle for-story-profile-pics ml-2'>
+    {% else %}
+      <a href="{% url 'profile' object.name %}" class='text-primary'>{{ object.name }}</a><img src="{{ object|get_profile_pic_url_from_story }}" class='rounded-circle for-story-profile-pics ml-2'>
+    {% endif %}
+  </div>
+  {% if object.picture %}
+    <figure class="figure">
+      <img src="{{ object.picture.url }}" class='figure-img img-fluid rounded'>
+      {% if object.picture_caption %}
+        <figcaption class='figure-caption text-right'>{{ object.picture_caption }}</figcaption>
+      {% endif %}
+    </figure>
+  {% else %}
+    <!-- better withouf figure class, adds useless space, but I am keeping it for actual pictures because they might help with sizing and stuff, we wil see -->
+    <img src="/media/{{ object.issue_to_write_about }}_default.jpg" class="card-img-top rounded" alt="StoryPicture">
+  {% endif %}
+  <div class="card-body">
+    <h5 class='card-title'><a href={{ object.get_absolute_url }}>{{ object.title }}</a></h5>
+    <h6 class='card-subtitle text-muted'><small>{{ object.date_created }} - (Last Updated: {{ object.last_updated }})</small></h6>
+    <div class='card-text'>{{ object.content_text }}</div>
+    {% if object|num_comments_from_story == 1 %}
+      <div class='text-muted d-flex'>
+        <div class='mr-auto p-2'><small>{{ object|num_comments_from_story }} comment</small></div>
+        <div class='p-2'><small><strong>Topic:</strong> {{ object.issue_to_write_about }}, <strong>Category:</strong> {{ object.category_to_write_about }}, <strong>Tags:</strong> {{ object.tags }}</small></div>
+      </div>
+    {% else %}
+      <div class='text-muted d-flex'>
+        <div class='mr-auto p-2'><small>{{ object|num_comments_from_story }} comments</small></div>
+        <div class='p-2'><small><strong>Topic:</strong> {{ object.issue_to_write_about }}, <strong>Category:</strong> {{ object.category_to_write_about }}, <strong>Tags:</strong> {{ object.tags }}</small></div>
+      </div>
+    {% endif %}
+    {% if request.user == object.name %}
+      <a class="btn btn-sm btn-outline-danger" href="{% url 'story-delete' object.id %}">Delete</a>
+      <a class="btn btn-sm btn-outline-info" href="{% url 'story-update' object.id %}">Update</a>
+    {% endif %}
+    <div class="d-flex justify-content-end">
+      <!-- better her or on left side? -->
+      <button class='btn btn-sm btn-outline-secondary' disabled>Share This By Copying <a href={{ object.get_absolute_url }}>Link!</a></button>
+    </div>
+  </div>
+</div>
+
+<!-- kind of works -->
+<!-- purple -->
+<div class="col-md-9">
+<!-- pink -->
+<!-- <div class="row ml-2">
+  {% for object in object_list %}
+  <div class="col-md-5">
+    <div class='card mb-4'>
+      <div class="card-header">
+        {% if object.anonymous %}
+          <span class='text-muted'>Anonymous User</span><img src="/media/incognito.png/" class='rounded-circle for-story-profile-pics ml-2'>
+        {% else %}
+          <a href="{% url 'profile' object.name %}" class='text-primary'>{{ object.name }}</a><img src="{{ object|get_profile_pic_url_from_story }}" class='rounded-circle for-story-profile-pics ml-2'>
+        {% endif %}
+      </div>
+      {% if object.picture %}
+        <figure class="figure">
+          <img src="{{ object.picture.url }}" class='figure-img img-fluid rounded'>
+          {% if object.picture_caption %}
+            <figcaption class='figure-caption text-right'>{{ object.picture_caption }}</figcaption>
+          {% endif %}
+        </figure>
+      {% else %}
+        <img src="/media/{{ object.issue_to_write_about }}_default.jpg" class="card-img-top rounded" alt="StoryPicture">
+      {% endif %}
+      <div class="card-body">
+        <h5 class='card-title'><a href={{ object.get_absolute_url }}>{{ object.title }}</a></h5>
+        <h6 class='card-subtitle text-muted'><small>{{ object.date_created }} - (Last Updated: {{ object.last_updated }})</small></h6>
+        <div class='card-text'>{{ object.content_text }}</div>
+        {% if object|num_comments_from_story == 1 %}
+          <div class='text-muted d-flex'>
+            <div class='mr-auto p-2'><small>{{ object|num_comments_from_story }} comment</small></div>
+            <div class='p-2'><small><strong>Topic:</strong> {{ object.issue_to_write_about }}, <strong>Category:</strong> {{ object.category_to_write_about }}, <strong>Tags:</strong> {{ object.tags }}</small></div>
+          </div>
+        {% else %}
+          <div class='text-muted d-flex'>
+            <div class='mr-auto p-2'><small>{{ object|num_comments_from_story }} comments</small></div>
+            <div class='p-2'><small><strong>Topic:</strong> {{ object.issue_to_write_about }}, <strong>Category:</strong> {{ object.category_to_write_about }}, <strong>Tags:</strong> {{ object.tags }}</small></div>
+          </div>
+        {% endif %}
+        {% if request.user == object.name %}
+          <a class="btn btn-sm btn-outline-danger" href="{% url 'story-delete' object.id %}">Delete</a>
+          <a class="btn btn-sm btn-outline-info" href="{% url 'story-update' object.id %}">Update</a>
+        {% endif %}
+        <div class="d-flex justify-content-end">
+          <button class='btn btn-sm btn-outline-secondary' disabled>Share This By Copying <a href={{ object.get_absolute_url }}>Link!</a></button>
+        </div>
+      </div>
+    </div>
+  </div> -->
+    {% endfor %}
+    <!-- pink -->
+  </div>
+<!-- purple -->
+</div>
+
+
+<!-- pink -->
+<!-- works somewhat right now, could also try using card decks and card groups -->
+<div class="row ml-2">
+  {% for object in object_list %}
+  <div class="col-md-6">
+    <div class='card mb-4'>
+      <div class="card-header">
+        {% if object.anonymous %}
+          <span class='text-muted'>Anonymous User</span><img src="/media/incognito.png/" class='rounded-circle for-story-profile-pics ml-2'>
+        {% else %}
+          <a href="{% url 'profile' object.name %}" class='text-primary'>{{ object.name }}</a><img src="{{ object|get_profile_pic_url_from_story }}" class='rounded-circle for-story-profile-pics ml-2'>
+        {% endif %}
+      </div>
+      {% if object.picture %}
+        <figure class="figure">
+          <img src="{{ object.picture.url }}" class='figure-img img-fluid rounded'>
+          {% if object.picture_caption %}
+            <figcaption class='figure-caption text-right'>{{ object.picture_caption }}</figcaption>
+          {% endif %}
+        </figure>
+      {% else %}
+        <!-- better withouf figure class, adds useless space, but I am keeping it for actual pictures because they might help with sizing and stuff, we wil see -->
+        <img src="/media/{{ object.issue_to_write_about }}_default.jpg" class="card-img-top rounded" alt="StoryPicture">
+      {% endif %}
+      <div class="card-body">
+        <h5 class='card-title'><a href={{ object.get_absolute_url }}>{{ object.title }}</a></h5>
+        <h6 class='card-subtitle text-muted'><small>{{ object.date_created }} - (Last Updated: {{ object.last_updated }})</small></h6>
+        <div class='card-text'>{{ object.content_text|truncatechars:200 }}</div>
+        {% if object|num_comments_from_story == 1 %}
+          <div class='text-muted d-flex'>
+            <div class='mr-auto p-2'><small>{{ object|num_comments_from_story }} comment</small></div>
+            <div class='p-2'><small><strong>Topic:</strong> {{ object.issue_to_write_about }}, <strong>Category:</strong> {{ object.category_to_write_about }}, <strong>Tags:</strong> {{ object.tags }}</small></div>
+          </div>
+        {% else %}
+          <div class='text-muted d-flex'>
+            <div class='mr-auto p-2'><small>{{ object|num_comments_from_story }} comments</small></div>
+            <div class='p-2'><small><strong>Topic:</strong> {{ object.issue_to_write_about }}, <strong>Category:</strong> {{ object.category_to_write_about }}, <strong>Tags:</strong> {{ object.tags }}</small></div>
+          </div>
+        {% endif %}
+        {% if request.user == object.name %}
+          <a class="btn btn-sm btn-outline-danger" href="{% url 'story-delete' object.id %}">Delete</a>
+          <a class="btn btn-sm btn-outline-info" href="{% url 'story-update' object.id %}">Update</a>
+        {% endif %}
+        <div class="d-flex justify-content-end">
+          <!-- better her or on left side? -->
+          <button class='btn btn-sm btn-outline-secondary' disabled>Share This By Copying <a href={{ object.get_absolute_url }}>Link!</a></button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+
+      <!-- ORIGINAL CARDS in STORIES, FOR SURE WORKS -->
+      <!-- <div class='card mb-4 text-white bg-primary'>
+      <div class="card-body">
+        <h4 class='card-title'><a href={{ object.get_absolute_url }}>{{ object.title }}</a></h4>
+        {% if object.anonymous %}
+          <h5 class='card-subtitle text-muted'>Anonymous User<img src="/media/incognito.png/" class='rounded-circle for-story-profile-pics ml-2'></h5>
+        {% else %}
+          <h5 class='card-subtitle text-muted'><a href="{% url 'profile' object.name %}" class='text-muted'>{{ object.name }}</a><img src="{{ object|get_profile_pic_url_from_story }}" class='rounded-circle for-story-profile-pics ml-2'></h5>
+        {% endif %}
+        <div class='card-text'>{{ object.content_text }}</div>
+        <div class='card-text text-muted'><small>Posted: {{ object.date_created }} - (Updated: {{ object.last_updated }})</small></div>
+        {% if object|num_comments_from_story == 1 %}
+          <div class='text-muted d-flex'>
+            <div class='mr-auto p-2'><small>{{ object|num_comments_from_story }} comment</small></div>
+            <div class='p-2'><small>Topic: {{ object.issue_to_write_about }}, Category: {{ object.category_to_write_about }}, Tags: {{ object.tags }}</small></div>
+          </div>
+        {% else %}
+          <div class='text-muted d-flex'>
+            <div class='mr-auto p-2'><small>{{ object|num_comments_from_story }} comments</small></div>
+            <div class='p-2'><small>Topic: {{ object.issue_to_write_about }}, Category: {{ object.category_to_write_about }}, Tags: {{ object.tags }}</small></div>
+          </div>
+        {% endif %}
+        {% if request.user == object.name %}
+          <a class="btn btn-sm btn-outline-danger" href="{% url 'story-delete' object.id %}">Delete</a>
+          <a class="btn btn-sm btn-outline-info" href="{% url 'story-update' object.id %}">Update</a>
+        {% endif %}
+        <button class='btn btn-sm btn-outline-secondary' disabled>Share This By Copying <a href={{ object.get_absolute_url }}>Link!</a></button>
+      </div>
+    </div> -->
+    {% endfor %}
+    <!-- pink -->
+  </div>
+
+  <!-- ORIGINAL CARDS in STORIES, FOR SURE WORKS -->
+  <!-- <div class='card mb-4 text-white bg-primary'>
+  <div class="card-body">
+    <h4 class='card-title'><a href={{ object.get_absolute_url }}>{{ object.title }}</a></h4>
+    {% if object.anonymous %}
+      <h5 class='card-subtitle text-muted'>Anonymous User<img src="/media/incognito.png/" class='rounded-circle for-story-profile-pics ml-2'></h5>
+    {% else %}
+      <h5 class='card-subtitle text-muted'><a href="{% url 'profile' object.name %}" class='text-muted'>{{ object.name }}</a><img src="{{ object|get_profile_pic_url_from_story }}" class='rounded-circle for-story-profile-pics ml-2'></h5>
+    {% endif %}
+    <div class='card-text'>{{ object.content_text }}</div>
+    <div class='card-text text-muted'><small>Posted: {{ object.date_created }} - (Updated: {{ object.last_updated }})</small></div>
+    {% if object|num_comments_from_story == 1 %}
+      <div class='text-muted d-flex'>
+        <div class='mr-auto p-2'><small>{{ object|num_comments_from_story }} comment</small></div>
+        <div class='p-2'><small>Topic: {{ object.issue_to_write_about }}, Category: {{ object.category_to_write_about }}, Tags: {{ object.tags }}</small></div>
+      </div>
+    {% else %}
+      <div class='text-muted d-flex'>
+        <div class='mr-auto p-2'><small>{{ object|num_comments_from_story }} comments</small></div>
+        <div class='p-2'><small>Topic: {{ object.issue_to_write_about }}, Category: {{ object.category_to_write_about }}, Tags: {{ object.tags }}</small></div>
+      </div>
+    {% endif %}
+    {% if request.user == object.name %}
+      <a class="btn btn-sm btn-outline-danger" href="{% url 'story-delete' object.id %}">Delete</a>
+      <a class="btn btn-sm btn-outline-info" href="{% url 'story-update' object.id %}">Update</a>
+    {% endif %}
+    <button class='btn btn-sm btn-outline-secondary' disabled>Share This By Copying <a href={{ object.get_absolute_url }}>Link!</a></button>
+  </div>
+</div> -->
+{% endfor %}
+<!-- pink -->
+</div>
+<!-- col md-9- WHAT DOES THIS DO- LOOK TO CHANGE- literally nothing, wasn't even set up properly -->
+<!-- {% for object in page_obj %}
+<div class='card mb-4'>
+<div class="card-body">
+  <h4 class='card-title'><a href={{ object.get_absolute_url }}>{{ object.title }}</a></h4>
+  {% if object.anonymous %}
+    <h5 class='card-subtitle text-muted'>Anonymous User<img src="/media/incognito.png/" class='rounded-circle for-story-profile-pics ml-2'></h5>
+    {% if request.user == object.name %}
+      <span class='text-muted'><em>(this is you)</em></span>
+    {% endif %}
+  {% else %}
+    <h5 class='card-subtitle text-muted'>{{ object.name }}<img src="{{ object|get_profile_pic_url_from_story }}" class='rounded-circle for-story-profile-pics ml-2'></h5>
+  {% endif %}
+  <p class='card-text'>{{ object.content_text }}</p>
+  <p class='card-text text-muted'>Posted: {{ object.date_created }} - (Updated: {{ object.last_updated }})</p>
+  {% if object|num_comments_from_story == 1 %}
+    <p class='text-muted mt-2'>{{ object|num_comments_from_story }} comment</p>
+  {% else %}
+    <p class='text-muted mt-2'>{{ object|num_comments_from_story }} comments</p>
+  {% endif %}
+  {% if request.user == object.name %}
+    <a class="btn btn-sm btn-outline-danger" href="{% url 'story-delete' object.id %}">Delete</a>
+    <a class="btn btn-sm btn-outline-info" href="{% url 'story-update' object.id %}">Update</a>
+  {% endif %}
+  <button class='btn btn-sm btn-outline-secondary' disabled>Share This By Copying <a href={{ object.get_absolute_url }}>Link!</a></button>
+</div>
+</div>
+{% endfor %} -->

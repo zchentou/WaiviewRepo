@@ -1,0 +1,169 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load artworks_extras %}
+{% load profiles_extras %}
+{% block content %}
+
+<a href="{% url 'photo-list' %}" class='btn btn-sm btn-secondary mb-3'>Go Back To All Images/Videos</a>
+
+
+<div class='card'>
+  <div class="card-body">
+    {% if object.title %}
+      <h2 class='card-title'>{{ object.title }}</h2>
+    {% endif %}
+      <h4 class='card-subtitle text-muted'><a href="{% url 'profile' object.author %}" class='text-muted'>{{ object.author }}</a><img src="{{ object|get_profile_pic_url_from_photo }}" class='rounded-circle for-story-profile-pics ml-2'></h4>
+    {% if object.picture %}
+      <div class="my-4">
+        <figure class="figure">
+          <img src="{{ object.picture.url }}" class='for-story-detail-pics figure-img img-fluid rounded'>
+          {% if object.picture_caption %}
+            <figcaption class='figure-caption'>{{ object.picture_caption }}</figcaption>
+          {% endif %}
+        </figure>
+      </div>
+    {% endif %}
+    {% if object.video %}
+      <div class="my-4">
+        <figure class="figure">
+          <video width='676' height='500' controls preload playsInline>
+            <source src="{{ object.video.url }}" type="video/mp4">
+          </video>
+          {% if object.picture_caption %}
+            <figcaption class='figure-caption'>{{ object.picture_caption }}</figcaption>
+          {% endif %}
+        </figure>
+      </div>
+    {% endif %}
+    <div class='d-flex'>
+      <p class='text-muted mr-auto'>
+        <em>
+          Posted: {{ object.date_created }}
+        {% if not object|date_created_equal_to_last_updated %}
+          (Last Updated: {{ object.last_updated }})
+        {% endif %}
+        </em>
+      </p>
+      <div class="">
+        <div class=''><strong>Topic:</strong> {{ object.topic }}</div>
+        <div class=''><strong>Category:</strong> {{ object.type }}</div>
+        <div class=''><strong>Tags:</strong> {{ object.tags }}</div>
+      </div>
+    </div>
+    {% if request.user == object.author %}
+      <a class="btn btn-sm btn-outline-danger" href="{% url 'photo-delete' object.id %}">Delete</a>
+      <a class="btn btn-sm btn-outline-info" href="{% url 'photo-update' object.id %}">Update</a>
+    {% endif %}
+    <button class='btn btn-sm btn-outline-secondary' disabled>Share This By Right-Clicking and Copying <a href={{ object.get_absolute_url }}>Link!</a></button>
+  </div>
+</div>
+
+<h2 class='mt-5'>Comments ({{ object|num_comments_from_photo }})</h2>
+<p>
+  <button type="button" class='btn btn-primary' data-toggle='collapse' data-target='#comment'>Post A Comment</button>
+</p>
+<div class="collapse" id='comment'>
+  <div class="container pt-3 ml-3">
+    <form method="post"> {% csrf_token %}
+      <div class='form-group'>
+        {{ comment_form|crispy }}
+      <button type="submit" name='theid' value='{{ 0 }}' class='btn btn-secondary'>Submit Comment</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class='container'>
+  {% for comment in comment_list %}
+    <div class="card ml-3 mb-3">
+      <div class="card-header py-1">
+        <h4 class='card-title m-1'>
+          <div class='d-flex'>
+            <a href="{% url 'profile' comment.author %}" class='text-dark'>{{ comment.author }}</a><img src="{{ comment|get_profile_pic_url_from_comment }}" class='rounded-circle for-story-profile-pics ml-2'>
+            <div class="mr-auto"></div>
+            <div class="text-muted">
+              <small>
+                <em>
+                  {{ comment.date_created }}
+                  {% if not comment|date_created_equal_to_last_updated %}
+                    (Updated: {{ comment.last_updated }})
+                  {% endif %}
+                </em>
+              </small>
+            </div>
+          </div>
+        </h4>
+      </div>
+      <div class="card-body">
+        <p class='card-text'>{{ comment.text }}</p>
+        {% if request.user == comment.author %}
+          <a class="btn btn-sm btn-outline-danger" href="{% url 'photo-comment-delete' comment.id %}">Delete</a>
+          <a class="btn btn-sm btn-outline-info" href="{% url 'photo-comment-update' comment.id %}">Update</a>
+        {% endif %}
+      </div>
+      <hr class='my-1'>
+      <span style='padding-left:20px' class='mb-3'>
+        {% if reply_list|filter_repliesinthiscomment_exists:comment.id %}
+          <button data-target='#replies{{comment.id}}' type="button" class='btn btn-link' data-toggle='collapse'>
+            Replies ↓
+          </button>
+        {% endif %}
+        <div class="btn-group dropright">
+          <button type="button" class="btn btn-outline-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Reply
+          </button>
+          <div class="dropdown-menu">
+            <div class='card'>
+                <form method="post" class='px-2 py-2'> {% csrf_token %}
+                  <div class='form-group'>
+                    {{ reply_form|crispy }}
+                    <button type="submit" name='theid' value='{{ comment.id }}' class='btn btn-secondary'>Submit Reply</button>
+                  </div>
+                </form>
+            </div>
+          </div>
+        </div>
+
+        <div class="collapse" id="replies{{comment.id}}">
+          <div class='container'>
+            {% for reply in reply_list %}
+              {% if comment.id == reply.comment_id %}
+                <div class="card ml-3 my-3">
+                  <div class="card-header py-1">
+                    <h4 class='card-title m-1'>
+                      <div class='d-flex'>
+                        <a href="{% url 'profile' reply.author %}" class='text-dark'>{{ reply.author }}</a><img src="{{ reply|get_profile_pic_url_from_reply }}" class='rounded-circle for-story-profile-pics ml-2'>
+                        <div class="mr-auto"></div>
+                        <div class="text-muted">
+                          <small>
+                            <em>
+                              {{ reply.date_created }}
+                              {% if not reply|date_created_equal_to_last_updated %}
+                                (Updated: {{ reply.last_updated }})
+                              {% endif %}
+                            </em>
+                          </small>
+                        </div>
+                      </div>
+                    </h4>
+                  </div>
+                  <div class="card-body">
+                    <p class='card-text'>{{ reply.text }}</p>
+                    {% if request.user == reply.author %}
+                      <a class="btn btn-sm btn-outline-danger" href="{% url 'photo-reply-delete' reply.id %}">Delete</a>
+                      <a class="btn btn-sm btn-outline-info" href="{% url 'photo-reply-update' reply.id %}">Update</a>
+                    {% endif %}
+                  </div>
+                </div>
+              {% endif %}
+            {% endfor %}
+          </div>
+        </div>
+      </span>
+    </div>
+  {% empty %}
+    <h5 class='text-muted'>No comments posted yet.</h5>
+  {% endfor %}
+</div>
+
+{% endblock %}

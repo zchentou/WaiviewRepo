@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load stories_extras %}
+{% block content %}
+<div>
+  <form method="POST" enctype='multipart/form-data'> {% csrf_token %}
+    <div class='form-group'>
+      <h4>Your Story</h4>
+      <p class='lead'> The available subcategories for each topic are: </p>
+      <div class="row">
+        {% for issue in request|all_issues %}
+        <div class="container mr-auto col-md-4">
+          <h2>{{ issue }}: </h2>
+          <ul class='lead'>
+            {% for category in issue|return_all_categories_for_issue %}
+              <li> {{ category }} </li>
+            {% endfor %}
+          </ul>
+        </div>
+        {% endfor %}
+      </div>
+        {{ form|crispy }}
+      <button type="submit" name="button" class="btn btn-outline-primary">Post</button>
+      </div>
+  </form>
+</div>
+
+{% endblock %}

@@ -1,0 +1,323 @@
+{% load pages_extras %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+
+    <style>
+    /* current */
+      .bg-navy {
+        /* from primary color the #007bff is */
+        background: linear-gradient(to bottom, #003377 0%, #007bff 100%);
+        /*background: #85DCEB*/
+        /*background: linear-gradient(to bottom, #659DBD 0%, #85DCEB 100%);*/
+        /*background: #659DBD*/
+        /*background: #41B3A3*/
+        /*background: #86C232*/
+        /*background: #61892f*/
+        /*background: linear-gradient(to bottom, #0000ff 0%, #00ccff 100%);*/
+      }
+
+      .bg-second-navy-fade {
+        background: linear-gradient(to bottom, #4da3ff 0%, #80bdff 100%);
+      }
+
+      .bg-third-navy-fade {
+        background: #003377
+      }
+
+      .bg-navy-light {
+        /*background: linear-gradient(to bottom, #659DBD 0%, #85DCEB 100%);*/
+        background: #85DCEB
+        /*background: #41B3A3*/
+      }
+
+      .bg-navy-try {
+        /*background: linear-gradient(to bottom, #659DBD 0%, #85DCEB 100%);*/
+        background: #007bff
+        /*background: #41B3A3*/
+      }
+
+
+      .bg-beige {
+        background: #F5F5DC
+        /* background: #6495ED */
+      }
+      .bg-sky-blue {
+        background: #6495ED
+      }
+
+      .bg-beige-fade {
+        background: linear-gradient(to bottom, #FFFFFF 0%,  #F5F5DC 100%);
+        /* background: #6495ED */
+      }
+
+      .bg-beige-light {
+        background: #FFF5DC
+        /* background: #6495ED */
+      }
+
+      .text_color_green {
+        color: #90EE90
+      }
+
+      .dropdown-menu {
+      width: 800px;
+      height: 200px;
+      }
+
+      .for-profile-pics {
+        max-width: 200px;
+        max-height: 200px;
+      }
+
+      .for-story-profile-pics {
+        max-width: 35px;
+        max-height: 35px;
+      }
+
+      .for-story-detail-pics {
+        max-width: 500px;
+        max-height: 500px;
+      }
+
+      .card-columns {
+        column-gap: 0rem;
+      }
+
+      .text-light-blue-fade {
+        background: -webkit-linear-gradient(#FFFFFF, #ccffff);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      .no-shrink-no-work {
+        flex-shrink: 0;
+      }
+
+    </style>
+
+
+    <title>Waiview</title>
+
+  </head>
+
+  <body class=''>
+    <header class="bg-navy">
+      <div class="container p-1">
+        <h1 class='text-light-blue-fade'>Waiview</h1>
+        <div class="container p-1">
+          <h3 style="font-family:cursive" class='text-light-blue-fade'> {{ request|daily_quote_text }}
+          {% if request|daily_quote_storyid %}
+            - <a href="{% url 'profile' request|story_object_from_daily_quote_name %}" class='text-light-blue-fade'>{{ request|story_object_from_daily_quote_name }}</a><span class='text-light-blue-fade'> (from story </span>  <a href="{% url 'story-detail' request|daily_quote_storyid %}" class='text-light-blue-fade'>{{ request|story_object_from_daily_quote_title }} </a>)</h3>
+          {% endif %}
+        </div>
+
+        <nav class="navbar navbar-dark navbar-expand-md rounded bg-primary">
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSmaller" aria-controls="navbarSmaller" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id='navbarSmaller'>
+            <ul class="navbar-nav mr-auto">
+              <li class="nav-item">
+                {% if request|am_home %}
+                  <a class="nav-link active" href="{% url 'home' %}">Home</a>
+                {% else %}
+                  <a class="nav-link" href="{% url 'home' %}">Home</a>
+                {% endif %}
+              </li>
+              <li class="nav-item">
+                {% if 'stories' in request.path and 'profiles' not in request.path %}
+                  <a class="nav-link active" href="{% url 'story-list' 'everything' %}">Stories</a>
+                {% else %}
+                  <a class="nav-link" href="{% url 'story-list' 'everything' %}">Stories</a>
+                {% endif %}
+              </li>
+              <li class="nav-item">
+                {% if 'images' in request.path and 'profiles' not in request.path %}
+                  <a class="nav-link active" href="{% url 'photo-list-media_type' 'picture' %}">Images/Videos</a>
+                {% else %}
+                  <a class="nav-link" href="{% url 'photo-list-media_type' 'picture' %}">Images/Videos</a>
+                {% endif %}
+              </li>
+              <li class="nav-item">
+                {% if 'links' in request.path and 'profiles' not in request.path %}
+                  <a class="nav-link active" href="{% url 'link-list' 'date' %}">Resources</a>
+                {% else %}
+                  <a class="nav-link" href="{% url 'link-list' 'date' %}">Resources</a>
+                {% endif %}
+              </li>
+            </ul>
+            <ul class="navbar-nav">
+              <form class="form-inline justify-right" method='GET' action='{% url 'user-search' %}'>
+                <div class="d-md-flex justify-content-end">
+                  {% if request.GET.search_bar %}
+                    <input id='search_bar_user' class="form-control w-100 mr-2" type="search" name='search_bar_user' placeholder="Search Users..." value='Searched for: {{ request.GET.search_bar }}' >
+                  {% else %}
+                    <input id='search_bar_user' class="form-control w-100 mr-2" type="search" name='search_bar_user' placeholder="Search All Users..." >
+                  {% endif %}
+                </div>
+                <button class = 'btn btn-success my-2 my-md-0 mr-2' name='people_search' class='dropdown-item' type='submit' value='users'>Search</button>
+              </form>
+              {% if user.is_authenticated %}
+                <li class="nav-item dropdown mx-2">
+                  {% if request|am_post %}
+                    <a class="nav-link btn btn-info active dropdown-toggle my-2 my-md-0" href ='#' id='dropdownMenuLink' role='button' data-toggle='dropdown'>Post</a>
+                    <!-- <a class="nav-link active dropdown-toggle" href ='#' id='dropdownMenuLink' role='button' data-toggle='dropdown'>Post</a> -->
+                  {% else %}
+                    <a class="nav-link btn btn-info dropdown-toggle my-2 my-md-0" href ='#' id='dropdownMenuLink' role='button' data-toggle='dropdown' style='color: #FFFFFF'>Post</a>
+                    <!-- <a class="nav-link dropdown-toggle" href ='#' id='dropdownMenuLink' role='button' data-toggle='dropdown'>Post</a> -->
+                  {% endif %}
+                  <div class="dropdown-menu w-100 bg-primary">
+                    <a class='dropdown-item' style='color: #FFFFFF' href="{% url 'story-create' %}">A Story</a>
+                    <a class='dropdown-item' style='color: #FFFFFF' href="{% url 'photo-create' %}">An Image/Video</a>
+                    <a class='dropdown-item' style='color: #FFFFFF' href="{% url 'link-create' %}">A Resource/Link</a>
+                  </div>
+                </li>
+                <li class="nav-item mr-2">
+                  {% if request.user.username in request.path or 'accounts/email/' in request.path or 'accounts/password/change/' in request.path %}
+                    <a class="nav-link btn btn-info active my-2 my-md-0" href="{% url 'profile' user.username %}">Profile</a>
+                    <!-- <a class="nav-link active" href="{% url 'profile' user.username %}">Profile</a> -->
+                  {% else %}
+                    <a class="nav-link btn btn-info my-2 my-md-0" href="{% url 'profile' user.username %}" style='color: #FFFFFF'>Profile</a>
+                    <!-- <a class="nav-link" href="{% url 'profile' user.username %}">Profile</a> -->
+                  {% endif %}
+                </li>
+                <li class="nav-item">
+                  {% if request|am_account_logout %}
+                    <a class="nav-link active btn btn-info my-2 my-md-0" href="{% url 'account_logout' %}">Logout</a>
+                  {% else %}
+                    <a class="nav-link btn btn-info my-2 my-md-0" href="{% url 'account_logout' %}" style='color: #FFFFFF'>Logout</a>
+                  {% endif %}
+                </li>
+              {% else %}
+                <li class="nav-item">
+                {% if request|am_account_login %}
+                  <a class="nav-link btn btn-info active mx-2 my-2 my-sm-0" href="{% url 'account_login' %}">Login</a>
+                {% else %}
+                  <a class="nav-link btn btn-info mx-2 my-2 my-sm-0" href="{% url 'account_login' %}" style='color: #FFFFFF'>Login</a>
+                {% endif %}
+                </li>
+                <li class="nav-item">
+                  {% if request|am_account_signup %}
+                    <a class="nav-link btn btn-info active my-2 my-md-0" href="{% url 'account_signup' %}">Join the Wave</a>
+                  {% else %}
+                    <a class="nav-link btn btn-info my-2 my-md-0" href="{% url 'account_signup' %}" style='color: #FFFFFF'>Join the Wave</a>
+                  {% endif %}
+                </li>
+              {% endif %}
+            </ul>
+          </div>
+        </nav>
+      </div>
+    </header>
+
+    <!-- <div class="container mt-3">
+      <a href="{% url 'story-create' %}" class="btn btn-success">Share a story</a>
+      <a href="{% url 'photo-create' %}" class="btn btn-success">Post an image/video</a>
+      <a href="{% url 'link-create' %}" class="btn btn-success">Share a resource/link</a>
+      {% if user.is_authenticated %}
+        <a href="{% url 'profile' request.user %}" class="btn btn-secondary">Edit Profile</a>
+      {% endif %}
+      <hr>
+    </div> -->
+
+    <main class="container pt-4">
+      {% if messages %}
+        {% for each in messages %}
+          <div class="alert alert-{{ each.tags }}">
+            {{ each }}
+          </div>
+        {% endfor %}
+      {% else %}
+        {% if not user.is_authenticated and not request|am_account_login and not request|am_account_signup %}
+          <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <a href="{% url 'account_signup' %}" class=''>Sign up and join the wave</a> with just a username and password to be able to post, comment, and reply.
+            <button type="button" class="close" data-dismiss="alert" aria-label='Dismiss Tag'>
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+        {% endif %}
+      {% endif %}
+      {% block content %}
+      replace
+      {% endblock %}
+  </main>
+    <footer>
+      <div class="container my-5 py-1">
+        {% if not request|am_account_logout and not request|am_account_login and not request|am_account_signup and not request|am_post %}
+          <hr>
+            <a href="{% url 'story-create' %}" class="btn btn-success my-2 my-md-0">Share a story</a>
+            <span class="d-md-none">
+              <br>
+            </span>
+            <a href="{% url 'photo-create' %}" class="btn btn-success">Post an image/video</a>
+            <span class="d-md-none">
+              <br>
+            </span>
+            <a href="{% url 'link-create' %}" class="btn btn-success my-2 my-md-0">Share a resource/link</a>
+            {% if user.is_authenticated %}
+              <span class="d-md-none">
+                <br>
+              </span>
+              <a href="{% url 'profile' request.user %}" class="btn btn-secondary mb-2 my-md-0">Edit Profile</a>
+            {% endif %}
+          <hr>
+        {% endif %}
+        <h4>
+          See More
+
+        </h4>
+        <hr>
+        <div class="d-none d-sm-none d-md-block">
+          <div class="row ">
+            <div class="col">
+              <a href="{% url 'about' %}">About</a>
+            </div>
+            <div class="col">
+              <a href="{% url 'contact' %}">Contact</a>
+            </div>
+            <div class="col">
+              <a href="{% url 'privacy' %}">Privacy</a>
+            </div>
+            <div class="col">
+              <a href="{% url 'terms-of-use' %}">Terms and Conditions</a>
+            </div>
+            <div class="col">
+              <a href="{% url 'acknowledgments' %}">Acknowledgments</a>
+            </div>
+          </div>
+        </div>
+         <div class="d-md-none">
+           <p>
+             <a href="{% url 'about' %}">About</a>
+           </p>
+           <p>
+             <a href="{% url 'contact' %}">Contact</a>
+           </p>
+           <p>
+             <a href="{% url 'privacy' %}">Privacy</a>
+           </p>
+           <p>
+             <a href="{% url 'terms-of-use' %}">Terms and Conditions</a>
+           </p>
+           <p>
+             <a href="{% url 'acknowledgments' %}">Acknowledgments</a>
+           </p>
+         </div>
+      </div>
+    </footer>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+  </body>
+
+</html>

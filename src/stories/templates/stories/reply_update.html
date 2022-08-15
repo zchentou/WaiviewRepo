@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+<div>
+  <form method="POST"> {% csrf_token %}
+    <div class='form-group'>
+      <h4>Your Reply</h4>
+        {{ form|crispy }}
+      <button type="submit" name="button" class="btn btn-outline-info">Update</button>
+      </div>
+  </form>
+</div>
+
+{% endblock %}

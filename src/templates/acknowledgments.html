@@ -1,0 +1,383 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="jumbotron bg-primary text-white">
+  <h3 class='display-4'>Acknowledgments</h3>
+  <hr>
+  <p>
+    I had to learn Django using Corey Schafer's tutorial on youtube (with 17 videos) as well as a freeCodeCamp.org channel 4-hour long video on youtube about Django (codingforentrepeneurs). Some parts of this code resemble or have ideas that stem from these two, so I will show both of their MIT licenses below.
+  </p>
+  <p>
+    I also used a variety of open-source third-party packages and different programs to achieve the required functionality throughout my website. This includes django-allauth (for authentication of users), Bootstrap (for formatting of website and HTML), django-crispy-forms (for formatting forms), and even though I didn't end up using it in my final product, I also used Pillow from PIL (to help format images before I switched over to storing them on AWS S3 instead of locally).
+    Instead, I did end up using django-storages (specifically to help with storing images, videos, and various files to AWS S3). I also used gunicorn to help deploy my website using Heroku, as well as django-cleanup to automatically delete the releveant media file from the external storage service in the from of Amazon S3 when a user deletes the respective post or account.
+
+    Here is each of their open-source licenses that they provided:
+  </p>
+  <ul>
+    <p><strong>For codingforentrepeneurs:</strong>
+      MIT License
+
+      Copyright (c) 2018 Coding For Entrepreneurs
+
+      Permission is hereby granted, free of charge, to any person obtaining a copy
+      of this software and associated documentation files (the "Software"), to deal
+      in the Software without restriction, including without limitation the rights
+      to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+      copies of the Software, and to permit persons to whom the Software is
+      furnished to do so, subject to the following conditions:
+
+      The above copyright notice and this permission notice shall be included in all
+      copies or substantial portions of the Software.
+
+      THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+      IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+      FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+      AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+      LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+      OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+      SOFTWARE.
+    </p>
+    <p><strong>For Corey Schafer:</strong><em>(year was 2018, updates in 2019 in repository, so 2019-2019, and his full name is Cory Schafer- not filled out underneath because they weren't in the repository)</em>
+      MIT License
+
+      Copyright (c) [year] [fullname]
+
+      Permission is hereby granted, free of charge, to any person obtaining a copy
+      of this software and associated documentation files (the "Software"), to deal
+      in the Software without restriction, including without limitation the rights
+      to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+      copies of the Software, and to permit persons to whom the Software is
+      furnished to do so, subject to the following conditions:
+
+      The above copyright notice and this permission notice shall be included in all
+      copies or substantial portions of the Software.
+
+      THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+      IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+      FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+      AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+      LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+      OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+      SOFTWARE.
+    </p>
+    <p><strong>For django-allauth:</strong>
+      The MIT License (MIT)
+
+      Copyright (c) 2010-2017 Raymond Penners and contributors
+
+      Permission is hereby granted, free of charge, to any person
+      obtaining a copy of this software and associated documentation
+      files (the "Software"), to deal in the Software without
+      restriction, including without limitation the rights to use,
+      copy, modify, merge, publish, distribute, sublicense, and/or sell
+      copies of the Software, and to permit persons to whom the
+      Software is furnished to do so, subject to the following
+      conditions:
+
+      The above copyright notice and this permission notice shall be
+      included in all copies or substantial portions of the Software.
+
+      THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+      EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+      OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+      NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+      HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+      WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+      FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+      OTHER DEALINGS IN THE SOFTWARE.
+    </p>
+    <p><strong>For Bootstrap:</strong>
+      The MIT License (MIT)
+
+      Copyright (c) 2011-2018 Twitter, Inc.
+      Copyright (c) 2011-2018 The Bootstrap Authors
+
+      Permission is hereby granted, free of charge, to any person obtaining a copy
+      of this software and associated documentation files (the "Software"), to deal
+      in the Software without restriction, including without limitation the rights
+      to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+      copies of the Software, and to permit persons to whom the Software is
+      furnished to do so, subject to the following conditions:
+
+      The above copyright notice and this permission notice shall be included in
+      all copies or substantial portions of the Software.
+
+      THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+      IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+      FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+      AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+      LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+      OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+      THE SOFTWARE.
+    </p>
+    <p><strong>For django-crispy-forms:</strong>
+      Copyright (c) 2009-2015 Miguel Araujo and contributors.
+
+      Permission is hereby granted, free of charge, to any person
+      obtaining a copy of this software and associated documentation
+      files (the "Software"), to deal in the Software without
+      restriction, including without limitation the rights to use,
+      copy, modify, merge, publish, distribute, sublicense, and/or sell
+      copies of the Software, and to permit persons to whom the
+      Software is furnished to do so, subject to the following
+      conditions:
+
+      The above copyright notice and this permission notice shall be
+      included in all copies or substantial portions of the Software.
+
+      THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+      EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+      OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+      NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+      HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+      WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+      FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+      OTHER DEALINGS IN THE SOFTWARE.
+    </p>
+    <p><strong>For Pillow:</strong>
+      The Python Imaging Library (PIL) is
+
+          Copyright © 1997-2011 by Secret Labs AB
+          Copyright © 1995-2011 by Fredrik Lundh
+
+      Pillow is the friendly PIL fork. It is
+
+          Copyright © 2010-2020 by Alex Clark and contributors
+
+      Like PIL, Pillow is licensed under the open source PIL Software License:
+
+      By obtaining, using, and/or copying this software and/or its associated
+      documentation, you agree that you have read, understood, and will comply
+      with the following terms and conditions:
+
+      Permission to use, copy, modify, and distribute this software and its
+      associated documentation for any purpose and without fee is hereby granted,
+      provided that the above copyright notice appears in all copies, and that
+      both that copyright notice and this permission notice appear in supporting
+      documentation, and that the name of Secret Labs AB or the author not be
+      used in advertising or publicity pertaining to distribution of the software
+      without specific, written prior permission.
+
+      SECRET LABS AB AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS
+      SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS.
+      IN NO EVENT SHALL SECRET LABS AB OR THE AUTHOR BE LIABLE FOR ANY SPECIAL,
+      INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
+      LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE
+      OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+      PERFORMANCE OF THIS SOFTWARE.
+    </p>
+    <p><strong>For django-storages:</strong>
+      BSD 3-Clause License
+
+      Copyright (c) 2008 - 2019, See AUTHORS file.
+      All rights reserved.
+
+      Redistribution and use in source and binary forms, with or without
+      modification, are permitted provided that the following conditions are met:
+
+      1. Redistributions of source code must retain the above copyright notice, this
+         list of conditions and the following disclaimer.
+
+      2. Redistributions in binary form must reproduce the above copyright notice,
+         this list of conditions and the following disclaimer in the documentation
+         and/or other materials provided with the distribution.
+
+      3. Neither the name of the copyright holder nor the names of its
+         contributors may be used to endorse or promote products derived from
+         this software without specific prior written permission.
+
+      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+      AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+      IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+      DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+      FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+      DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+      SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+      CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+      OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+      OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+      <br>
+      <br>
+      From AUTHORS file: By order of apparition, thanks:
+      * Marty Alchin (S3)
+      * David Larlet (S3)
+      * Arne Brodowski (S3)
+      * Sebastian Serrano (S3)
+      * Andrew McClain (MogileFS)
+      * Rafal Jonca (FTP)
+      * Chris McCormick (S3 with Boto)
+      * Ivanov E. (Database)
+      * Ariel Núñez (packaging)
+      * Wim Leers (SymlinkOrCopy + patches)
+      * Michael Elsdörfer (Overwrite + PEP8 compatibility)
+      * Christian Klein (CouchDB)
+      * Rich Leland (Mosso Cloud Files)
+      * Jason Christa (patches)
+      * Adam Nelson (patches)
+      * Erik CW (S3 encryption)
+      * Axel Gembe (Hash path)
+      * Waldemar Kornewald (MongoDB)
+      * Russell Keith-Magee (Apache LibCloud patches)
+      * Jannis Leidel (S3 and GS with Boto)
+      * Andrei Coman (Azure)
+      * Chris Streeter (S3 with Boto)
+      * Josh Schneier (Fork maintainer, Bugfixes, Py3K)
+      * Anthony Monthe (Dropbox)
+      * EunPyo (Andrew) Hong (Azure)
+      * Michael Barrientos (S3 with Boto3)
+      * piglei (patches)
+      * Matt Braymer-Hayes (S3 with Boto3)
+      * Eirik Martiniussen Sylliaas (Google Cloud Storage native support)
+      * Jody McIntyre (Google Cloud Storage native support)
+      * Stanislav Kaledin (Bug fixes in SFTPStorage)
+      * Filip Vavera (Google Cloud MIME types support)
+      * Max Malysh (Dropbox large file support)
+      * Scott White (Google Cloud updates)
+      * Alex Watt (Google Cloud Storage patch)
+      * Jumpei Yoshimura (S3 docs)
+      * Jon Dufresne
+      * Rodrigo Gadea (Dropbox fixes)
+      * Martey Dodoo
+      * Chris Rink
+      * Shaung Cheng (S3 docs)
+      * Andrew Perry (Bug fixes in SFTPStorage)
+      * Manuel Kaufmann (humitos)
+      * Taras Petriichuk (Dropbox write_mode option)
+      * Zoe Liao (S3 docs)
+      * Jonathan Ehwald
+
+
+      Extra thanks to Marty for adding this in Django,
+      you can buy his very interesting book (Pro Django).
+    </p>
+
+    <p><strong>For gunicorn, with MIT License:</strong>
+      2009-2018 (c) Benoît Chesneau <benoitc@e-engura.org>
+      2009-2015 (c) Paul J. Davis <paul.joseph.davis@gmail.com>
+
+      Permission is hereby granted, free of charge, to any person
+      obtaining a copy of this software and associated documentation
+      files (the "Software"), to deal in the Software without
+      restriction, including without limitation the rights to use,
+      copy, modify, merge, publish, distribute, sublicense, and/or sell
+      copies of the Software, and to permit persons to whom the
+      Software is furnished to do so, subject to the following
+      conditions:
+
+      The above copyright notice and this permission notice shall be
+      included in all copies or substantial portions of the Software.
+
+      THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+      EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+      OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+      NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+      HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+      WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+      FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+      OTHER DEALINGS IN THE SOFTWARE.
+    </p>
+
+    <p><strong>For django-cleanup:</strong>
+      MIT License
+
+      Copyright (C) 2012 by Ilya Shalyapin, ishalyapin@gmail.com
+
+      Permission is hereby granted, free of charge, to any person obtaining a copy
+      of this software and associated documentation files (the "Software"), to deal
+      in the Software without restriction, including without limitation the rights
+      to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+      copies of the Software, and to permit persons to whom the Software is
+      furnished to do so, subject to the following conditions:
+
+      The above copyright notice and this permission notice shall be included in all
+      copies or substantial portions of the Software.
+
+      THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+      IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+      FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+      AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+      LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+      OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+      SOFTWARE.
+    </p>
+
+    <p><strong>For Django, whose open source framework allowed this website to be created:</strong>
+      Copyright (c) Django Software Foundation and individual contributors.
+      All rights reserved.
+
+      Redistribution and use in source and binary forms, with or without modification,
+      are permitted provided that the following conditions are met:
+
+          1. Redistributions of source code must retain the above copyright notice,
+             this list of conditions and the following disclaimer.
+
+          2. Redistributions in binary form must reproduce the above copyright
+             notice, this list of conditions and the following disclaimer in the
+             documentation and/or other materials provided with the distribution.
+
+          3. Neither the name of Django nor the names of its contributors may be used
+             to endorse or promote products derived from this software without
+             specific prior written permission.
+
+      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+      ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+      WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+      DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
+      ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+      (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+      LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+      ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+      (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+      SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+    </p>
+  </ul>
+</div>
+
+<div class="card">
+  <div class="card-body">
+    <p>
+      Furthermore, the pictures I use (e.g., the three on the homepage, default profile picture) currently come from Pixabay.
+      <br>
+      <br>
+      I also used Stack Overflow examples to learn more about certain features I wanted to use, and I used them as examples in writing my code. Even though I didn't use them directly in my code and only used them as guidance for writing my own code, I wanted to link them here for anyone interested (links are to respective user profile when there is a question, answer, or edit, or when it says Link:, the link is to the post itself).
+    </p>
+    <p>
+      For Using Timezones with Middleware: <br>
+      Question Name: Pytz - timezone activated yet getting wrong time. Am I missing something? <br>
+      Link: <a href="https://stackoverflow.com/questions/45000029/pytz-timezone-activated-yet-getting-wrong-time-am-i-missing-something">https://stackoverflow.com/questions/45000029/pytz-timezone-activated-yet-getting-wrong-time-am-i-missing-something</a> <br>
+      <a href="https://stackoverflow.com/users/990502/mistyd">Question Author Name- MistyD</a> <br>
+      <a href="https://stackoverflow.com/users/1572848/william-reed">Answer Author Name- William Reed</a> <a href="https://stackoverflow.com/users/641914/graham">(Edited by Graham)</a>
+    </p>
+    <p>
+      For Saving Timezones and Displaying all of them in Profile: <br>
+      Question Name: How to add drop down list for timezone using python-TZ at user registration page using UserCreationForm class <br>
+      Link: <a href="https://stackoverflow.com/questions/10578440/how-to-add-drop-down-list-for-timezone-using-python-tz-at-user-registration-page">https://stackoverflow.com/questions/10578440/how-to-add-drop-down-list-for-timezone-using-python-tz-at-user-registration-page</a> <br>
+      <a href="https://stackoverflow.com/users/834239/amit-pal">Question Author Name- Amit Pal</a> <a href="https://stackoverflow.com/users/165603/okm">(Edited by okm)</a> <br>
+      <a href="https://stackoverflow.com/users/136008/jpic">Answer Author Name- jpic</a>
+    </p>
+    <p>
+      For Help Compressing Images: <br>
+      Question Name: Losslessly compressing images on django <br>
+      Link: <a href="https://stackoverflow.com/questions/33077804/losslessly-compressing-images-on-django">https://stackoverflow.com/questions/45000029/pytz-timezone-activated-yet-getting-wrong-time-am-i-missing-something</a> <br>
+      <a href="#">Question Author Name- user4910881 (no link to user, likely deleted, since greyed out on Stack Overflow)</a> <br>
+      <a href="https://stackoverflow.com/users/1925257/xyres">Answer Author Name- xyres</a> <br>
+      <a href="https://stackoverflow.com/users/1972370/the-django-ninja">Answer Author Name- The Django Ninja</a> <br>
+      <a href="https://stackoverflow.com/users/21945/mhawke">Answer Author Name- mhawke</a> <a href="https://stackoverflow.com/users/-1/community">(Edited by Community)</a>
+    </p>
+    <p>
+      For Help Rotating Images To Correct Orientation: <br>
+      Question Name: Rotating an image with orientation specified in EXIF using Python without PIL including the thumbnail <br>
+      Link: <a href="https://stackoverflow.com/questions/13872331/rotating-an-image-with-orientation-specified-in-exif-using-python-without-pil-in">https://stackoverflow.com/questions/13872331/rotating-an-image-with-orientation-specified-in-exif-using-python-without-pil-in</a> <br>
+      <a href="https://stackoverflow.com/users/1729773/atoztoa">Question Author Name- ATOzTOA</a> <br>
+      <a href="https://stackoverflow.com/users/1350976/scabbiaza">Answer Author Name- scabbiaza</a> <a href="https://stackoverflow.com/users/-1/community">(Edited by Community)</a> <br>
+      <a href="https://stackoverflow.com/users/147129/garetjax">Answer Author Name- GaretJax</a> <br>
+      <a href="https://stackoverflow.com/users/1729773/atoztoa">Answer Author Name- ATOzTOA</a> <br>
+      <a href="https://stackoverflow.com/users/5015041/hyagoro">Answer Author Name- Hyagoro</a> <a href="https://stackoverflow.com/users/2438538/arel">(Edited by Arel)</a> <br>
+      <a href="https://stackoverflow.com/users/4396459/joelvarma">Answer Author Name- joelvarma</a> <a href="https://stackoverflow.com/users/3792790/pratik-gadoya">(Edited by Pratik Gadoya)</a> <br>
+      <a href="https://stackoverflow.com/users/2441026/user136036">Answer Author Name- user136036</a> <a href="https://stackoverflow.com/users/484127/tutudajuju">(Edited by tutuDajuju)</a>
+    </p>
+  </div>
+
+</div>
+
+{% endblock %}

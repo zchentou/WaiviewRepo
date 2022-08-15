@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+{% load stories_extras %}
+{% load profiles_extras %}
+{% block content %}
+
+{% for Category.objects.all %}
+  {% for all_issues blah blah%}
+    {% if request|only_issue: object %}
+      <a class="nav-item nav-link"><a href="{{ object.get_absolute_url }}" class='text-white'>{{ object.title }}</a>
+    {% if object.title == all %}
+      <a class="list-group-item active"><a href="{% url 'story-list' %}" class='text-light'>All Issues</a><
+    {% else %}
+      <a class="list-group-item"><a href="{{ object.get_absolute_url }}" class='text-primary'>{{ object.title }}</a>
+  {% endfor %}
+  {% endif %}
+{% endfor %}
+
+<!-- Example of for loop- wouldn't be only_COVID, would be only_whatever the issue is--> -->
+{% for Issue.objects.all %}
+  {% if request|only_issue: object %}
+    <li class="list-group-item active"><a href="{{ object.get_absolute_url }}" class='text-white'>{{ object.title }}</a></li>
+  {% if object.title == all %}
+    <li class="list-group-item active"><a href="{% url 'story-list' %}" class='text-light'>All Issues</a></li>
+  {% else %}
+    <li class="list-group-item"><a href="{{ object.get_absolute_url }}" class='text-primary'>{{ object.title }}</a></li>
+  {% endif %}
+{% endfor %}
+
+BACKUP
+<!--
+  <a class="nav-item nav-link text-light" href="{% url 'story-list' %}">All</a>
+  <a class="nav-item nav-link text-light" href="{% url 'story-experiences' %}">Experiences</a>
+  <a class="nav-item nav-link text-light" href="{% url 'story-reflections' %}">Reflections</a>
+  <a class="nav-item nav-link text-light" href="{% url 'story-protests' %}">Protests/Demonstrations</a>
+  <a class="nav-item nav-link text-light" href="{% url 'story-other' %}">Other</a> --- BACKUP --->
+
+<!-- CATEGORIES -->
+  {% if request|all_regular_stories or request|all_BLM_stories or request|all_COVID_stories %}
+    <a class="nav-item nav-link active" href="{{request.path}}">All</a>
+    <a class="nav-item nav-link" href="{{request.path}}experiences/">Experiences</a>
+    <a class="nav-item nav-link" href="{{request.path}}reflections/">Reflections</a>
+    <a class="nav-item nav-link" href="{{request.path}}protests/">Protests</a>
+    <a class="nav-item nav-link" href="{{request.path}}other/">Other</a>
+  {% else %}
+  <!-- fix this later for active -->
+    <a class="nav-item nav-link text-light" href="{{request.path}}../">All</a>
+    <a class="nav-item nav-link text-light" href="{{request.path}}../experiences/">Experiences</a>
+    <a class="nav-item nav-link text-light" href="{{request.path}}../reflections/">Reflections</a>
+    <a class="nav-item nav-link text-light" href="{{request.path}}../protests/">Protests</a>
+    <a class="nav-item nav-link text-light" href="{{request.path}}../other/">Other</a>
+  {% endif %}
+
+<!-- ISSUES -->
+  {% if request|only_COVID %}
+  <!-- would be nice to have a for loop here because would make it a lot shorter, allow me to add issues from admin -->
+    <li class="list-group-item"><a href="{% url 'story-list' %}" class='text-primary'>All Issues</a></li>
+    <li class="list-group-item active"><a href="{% url 'story-covid' %}" class='text-white'>#COVID-19</a></li>
+    <li class="list-group-item"><a href="{% url 'story-BLM' %}" class='text-primary' >#BlackLivesMatter</a></li>
+  {% elif request|only_BLM %}
+    <li class="list-group-item"><a href="{% url 'story-list' %}" class='text-primary'>All Issues</a></li>
+    <li class="list-group-item"><a href="{% url 'story-covid' %}" class='text-primary'>#COVID-19</a></li>
+    <li class="list-group-item active"><a href="{% url 'story-BLM' %}" class='text-light' >#BlackLivesMatter</a></li>
+
+
+    <!-- <div class="dropdown">
+      <button class='btn btn-outline-primary btn-sm dropdown-toggle' type="button" data-toggle="dropdown" aria-haspopup='true' aria-expanded='false'>
+        Filter By:
+      </button>
+    </div> -->
+  {% else %}
+    <li class="list-group-item active"><a href="{% url 'story-list' %}" class='text-light'>All Issues</a></li>
+    <li class="list-group-item"><a href="{% url 'story-covid' %}" class='text-primary'>#COVID-19</a></li>
+    <li class="list-group-item "><a href="{% url 'story-BLM' %}" class='text-primary' >#BlackLivesMatter</a></li>
+  {% endif %}
+
+
+Not Backup, trying something:
+  {% for issue in request|all_issues %}
+    {% if request|only_issue:issue.name %}
+      <li class="list-group-item"><a href="{% url 'story-list' %}" class='text-primary'>All Issues</a></li>
+    {% endif %}
+  {% empty %}
+  <!-- active if and only if any issue is not the only issue -->
+    <li class="list-group-item active"><a href="{% url 'story-list' %}" class='text-light'>All Issues</a></li>
+  {% endfor %}
+  <!-- technically not empty for loop because it still goes through, so this doesn't work -->

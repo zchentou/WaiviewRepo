@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+  <div class="jumbotron">
+    <div class="container">
+      <div class="d-flex justify-content-end p-0 m-0">
+        {% if user_of_profile == request.user %}
+          <a class='btn btn-info text-white' href="{% url 'profile' request.user.username %}">Edit Profile</a>
+          <a class='btn btn-danger active' href="{% url 'profile-delete' request.user.username %}">Delete Account</a>
+        {% endif %}
+      </div>
+      <h4 class='display-4'>{{ user_of_profile.username }}<img src="{{ user_of_profile.profile.picture.url }}" class='rounded-circle for-profile-pics ml-2'></h4>
+      <hr class='my-4'>
+      <p class="lead"> {{ user_of_profile.profile.first_name }} {{ user_of_profile.profile.last_name }} -
+        {% if user_of_profile.profile.occupation %}
+          {{ user_of_profile.profile.occupation }} -
+        {% endif %}
+      </p>
+      <hr class='my-4'>
+      {% if user_of_profile == request.user %}
+        <h5 class='mb-2'>See your posts in each section:</h5>
+      {% else %}
+        <h5 class='mb-2'>See their posts in each section:</h5>
+      {% endif %}
+      <div class="btn-group mb-2 mb-md-0">
+        <button type="button" class='btn btn-primary dropdown-toggle' name="button" data-toggle='dropdown' aria-haspopup="true" aria-expanded="false">
+          Stories
+        </button>
+        <div class="dropdown-menu w-25 bg-primary">
+          <a class='dropdown-item' style='color: #FFFFFF' href="{% url 'profile-story-list' user_of_profile.username %}">Stories</a>
+          <a class='dropdown-item' style='color: #FFFFFF' href="{% url 'profile-comment-list' user_of_profile.username %}">Comments</a>
+          <a class='dropdown-item' style='color: #FFFFFF' href="{% url 'profile-reply-list' user_of_profile.username %}">Replies</a>
+        </div>
+      </div>
+
+      <span class='d-md-none'><br></span>
+
+      <div class="btn-group mb-2 mb-md-0">
+        <button type="button" class='btn btn-primary dropdown-toggle' name="button" data-toggle='dropdown' aria-haspopup="true" aria-expanded="false">
+          Images/Videos
+        </button>
+        <div class="dropdown-menu w-25 bg-primary">
+          <a class='dropdown-item' style='color: #FFFFFF' href="{% url 'profile-photo-list' user_of_profile.username %}">Images/Videos</a>
+          <a class='dropdown-item' style='color: #FFFFFF' href="{% url 'profile-comment-list-photo' user_of_profile.username %}">Comments</a>
+          <a class='dropdown-item' style='color: #FFFFFF' href="{% url 'profile-reply-list-photo' user_of_profile.username %}">Replies</a>
+        </div>
+      </div>
+
+      <span class='d-md-none'><br></span>
+
+      <div class="btn-group">
+        <button type="button" class='btn btn-primary dropdown-toggle' name="button" data-toggle='dropdown' aria-haspopup="true" aria-expanded="false">
+          Resources/Links
+        </button>
+        <div class="dropdown-menu w-25 bg-primary">
+          <a class='dropdown-item' style='color: #FFFFFF' href="{% url 'profile-link-list' user_of_profile.username %}">Resources/Links</a>
+          <a class='dropdown-item' style='color: #FFFFFF' href="{% url 'profile-comment-list-link' user_of_profile.username %}">Comments</a>
+          <a class='dropdown-item' style='color: #FFFFFF' href="{% url 'profile-reply-list-link' user_of_profile.username %}">Replies</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+{% if user_of_profile == request.user %}
+  <div>
+    <form method="POST" enctype='multipart/form-data'> {% csrf_token %}
+      <div class='form-group'>
+        <div class="">
+          <h4 class='mb-2'>Deleting Your Account</h4>
+          <p class='lead'>Are you sure you want to delete your account?</p>
+          <p class='lead'>All your posts, including stories, images, resources, comments, and replies, will be deleted. You will lose the ability to comment and reply. You will still have access to this website but lose the ability to post anything. To post again, you will need to create a new account.</p>
+            {{ form|crispy }}
+          <button type="submit" name="button" class="btn btn-danger mr-2">Yes, I am sure.</button>
+          <a href="{% url 'profile' request.user %}" class='btn btn-primary'>No, take me back to editing my profile.</a>
+        </div>
+      </div>
+    </form>
+  </div>
+{% endif %}
+
+{% endblock %}

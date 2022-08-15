@@ -1,0 +1,139 @@
+{% extends 'base.html' %}
+{% load stories_extras %}
+{% load profiles_extras %}
+{% block content %}
+
+<div class="jumbotron">
+  <div class="container">
+    {% if user_of_profile == request.user %}
+      <div class="d-flex justify-content-end p-0 m-0">
+          <a class='btn btn-info text-white' href="{% url 'profile' request.user.username %}">Edit Profile</a>
+          <a class='btn btn-danger' href="{% url 'profile-delete' request.user.username %}">Delete Account</a>
+      </div>
+    {% endif %}
+    <h4 class='display-4'>{{ user_of_profile.username }}<img src="{{ user_of_profile.profile.picture.url }}" class='rounded-circle for-profile-pics ml-2'></h4>
+    <hr class='my-4'>
+    <p class="lead"> {{ user_of_profile.profile.first_name }} {{ user_of_profile.profile.last_name }} -
+      {% if user_of_profile.profile.occupation %}
+        {{ user_of_profile.profile.occupation }} -
+      {% endif %}
+    </p>
+    <hr class='my-4'>
+    {% if user_of_profile == request.user %}
+      <h5 class='mb-2'>See your posts in each section:</h5>
+    {% else %}
+      <h5 class='mb-2'>See their posts in each section:</h5>
+    {% endif %}
+    <div class="btn-group">
+      <button type="button" class='btn btn-primary dropdown-toggle' name="button" data-toggle='dropdown' aria-haspopup="true" aria-expanded="false">
+        Stories
+      </button>
+      <div class="dropdown-menu w-25 bg-primary">
+        <a class='dropdown-item' style='color: #FFFFFF' href="{% url 'profile-story-list' user_of_profile.username %}">Stories</a>
+        <a class='dropdown-item' style='color: #FFFFFF' href="{% url 'profile-comment-list' user_of_profile.username %}">Comments</a>
+        <a class='dropdown-item' style='color: #FFFFFF' href="{% url 'profile-reply-list' user_of_profile.username %}">Replies</a>
+      </div>
+    </div>
+    <div class="btn-group">
+      <button type="button" class='btn btn-primary dropdown-toggle' name="button" data-toggle='dropdown' aria-haspopup="true" aria-expanded="false">
+        Images/Videos
+      </button>
+      <div class="dropdown-menu w-25 bg-primary">
+        <a class='dropdown-item' style='color: #FFFFFF' href="{% url 'profile-story-list' user_of_profile.username %}">Images/Videos</a>
+        <a class='dropdown-item' style='color: #FFFFFF' href="{% url 'profile-comment-list' user_of_profile.username %}">Comments</a>
+        <a class='dropdown-item' style='color: #FFFFFF' href="{% url 'profile-reply-list' user_of_profile.username %}">Replies</a>
+      </div>
+    </div>
+    <div class="btn-group">
+      <button type="button" class='btn btn-primary dropdown-toggle' name="button" data-toggle='dropdown' aria-haspopup="true" aria-expanded="false">
+        Resources/Links
+      </button>
+      <div class="dropdown-menu w-25 bg-primary">
+        <a class='dropdown-item' style='color: #FFFFFF' href="{% url 'profile-story-list' user_of_profile.username %}">Resources/Links</a>
+        <a class='dropdown-item' style='color: #FFFFFF' href="{% url 'profile-comment-list' user_of_profile.username %}">Comments</a>
+        <a class='dropdown-item' style='color: #FFFFFF' href="{% url 'profile-reply-list' user_of_profile.username %}">Replies</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class='container'>
+  <h3>Stories ({{ page_obj.paginator.count }}):</h3>
+  <div class="row row-cols-1 row-cols-md-1">
+    {% for object in object_list %}
+        <div class='card mb-4 h-100'>
+          <div class="card-header py-3">
+            {% if object.anonymous %}
+              <span class='text-muted'>Anonymous User</span><img src="/media/incognito.png/" class='rounded-circle for-story-profile-pics ml-2'>
+              {% if request.user == object.name %}
+                <span class='text-muted'><em>(this is you)</em></span>
+              {% endif %}
+            {% else %}
+              <h5 class='card-subtitle p-0'><a href="{% url 'profile' object.name %}" class='text-muted'>{{ object.name }}</a><img src="{{ object|get_profile_pic_url_from_story }}" class='rounded-circle for-story-profile-pics ml-2'></h5>
+            {% endif %}
+          </div>
+          {% if object.picture %}
+              <img src="{{ object.picture.url }}" class='figure-img img-fluid rounded'>
+          {% endif %}
+          <div class="card-body">
+            <h3 class='card-title mb-1'><a href={{ object.get_absolute_url }}>{{ object.title }}</a></h3>
+            <h5 class='card-subtitle text-muted mb-1'>
+              <small>
+                {{ object.date_created }}
+                {% if not object|date_created_equal_to_last_updated %}
+                  (Updated: {{ object.last_updated }})
+                {% endif %}
+              </small>
+            </h5>
+            <div class='card-text'>{{ object.content_text|truncatechars:400 }}</div>
+            {% if object|num_comments_from_story == 1 %}
+              <div class='text-muted d-flex'>
+                <div class='mr-auto p-2'><small>{{ object|num_comments_from_story }} comment</small></div>
+                <div class='p-2'><small><strong>Topic:</strong> {{ object.issue_to_write_about }}, <strong>Category:</strong> {{ object.category_to_write_about }}, <strong>Tags:</strong> {{ object.tags }}</small></div>
+              </div>
+            {% else %}
+              <div class='text-muted d-flex'>
+                <div class='mr-auto p-2'><small>{{ object|num_comments_from_story }} comments</small></div>
+                <div class='p-2'><small><strong>Topic:</strong> {{ object.issue_to_write_about }}, <strong>Category:</strong> {{ object.category_to_write_about }}, <strong>Tags:</strong> {{ object.tags }}</small></div>
+              </div>
+            {% endif %}
+            {% if request.user == object.name %}
+              <a class="btn btn-sm btn-outline-danger" href="{% url 'story-delete' object.id %}">Delete</a>
+              <a class="btn btn-sm btn-outline-info" href="{% url 'story-update' object.id %}">Update</a>
+            {% endif %}
+            <div class="d-flex justify-content-end">
+              <button class='btn btn-sm btn-outline-secondary' disabled>Share This By Right-Clicking and Copying <a href={{ object.get_absolute_url }}>Link!</a></button>
+            </div>
+          </div>
+        </div>
+    {% endfor %}
+  </div>
+
+  <ul class='pagination'>
+    {% if page_obj.has_previous %}
+      {% if page_obj.number != 2 %}
+        <li class='page-item'><a class ='page-link' href="?page=1">First</a></li>
+        <!-- <li class='page-item'><a class ='page-link' href="?page= {{ page_obj.previous_page_number }}">Previous</a></li> -->
+      {% endif %}
+    {% endif %}
+    {% for num in page_obj.paginator.page_range %}
+      {% if page_obj.number == num %}
+        <li class='page-item active'><a class ='page-link' href="?page={{ num }}">{{ num }}</a></li>
+      <!-- this is messing stuff up -->
+      {% elif num > page_obj.number|add:'-2' and not num > page_obj.number|add:'1' %}
+        <li class='page-item'><a class ='page-link' href="?page={{ num }}">{{ num }}</a></li>
+      {% endif %}
+    {% endfor %}
+
+    {% if page_obj.has_next %}
+      {% if page_obj.number != page_obj.paginator.num_pages|add:'-1' %}
+        <!-- <li class='page-item'><a class ='page-link' href="?page={{ page_obj.next_page_number }}">Next</a></li> -->
+        <li class='page-item'><a class ='page-link' href="?page={{ page_obj.paginator.num_pages }}">Last</a></li>
+      {% endif %}
+    {% endif %}
+  </ul>
+</div>
+
+
+
+{% endblock %}

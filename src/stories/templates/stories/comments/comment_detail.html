@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+<!-- <div class='card'>
+  <div class="card-body">
+    <h2 class='card-title'>{{ object.title }}</h2>
+    <h4 class='card-subtitle text-muted'>{{ object.name }}</h4>
+    <p class='card-text'>{{ object.content_text }}</p>
+    <p class='card-text text-muted'>Posted: {{ object.date_created }}-(Updated: {{ object.last_updated }})</p>
+    {% if object.date_created != object.last_updated %}
+      <p class='card-text text-muted'>Last updated: {{ object.last_updated }}</p>
+    {% endif %}
+  </div>
+</div> -->
+
+<h2 class='mt-5'>Comment</h2>
+<div class='container'>
+    <div class="card ml-3 mb-3">
+      <div class="card-body">
+        <h5 class='card-title'>{{ object.author }}</h5>
+        <p class='card-subtitle text-muted'>{{ object.date_created }} (Updated: {{ object.last_updated }})</p>
+        <!-- <h5 class='card-subtitle text-muted'>{{ comment.date_created }}</h5> -->
+        <p class='card-text'>{{ object.text }}</p>
+      </div>
+      <!-- data-target goes with id -->
+      <span style='padding-left:20px'>
+        <p>
+            <button data-target='#replies' type="button" class='btn btn-link' data-toggle='collapse'>
+              Replies ↓
+            </button>
+        </p>
+          <div class="collapse" id="replies">
+              <div class='container'>
+                {% for reply in reply_list %}
+                  <div class="card ml-3 mb-3">
+                    <div class="card-body">
+                      <h5 class='card-title'>{{ reply.author }}</h5>
+                      <p class='card-subtitle text-muted'>{{ reply.date_created }} (Updated: {{ reply.last_updated }})</p>
+                      <!-- <h5 class='card-subtitle text-muted'>{{ comment.date_created }}</h5> -->
+                      <p class='card-text'>{{ reply.text }}</p>
+                    </div>
+                  </div>
+                {% empty %}
+                  <h5 class='text-muted'>No replies yet.</h5>
+                {% endfor %}
+              </div>
+          </div>
+        </span>
+    </div>
+</div>
+
+<div class="container pt-3 ml-3">
+  <form method="post"> {% csrf_token %}
+    <div class='form-group'>
+      {{ form|crispy }}
+    <button type="submit" name="button" class='btn btn-primary'>Reply</button>
+    </div>
+  </form>
+</div>
+
+{% endblock %}
+
+<!-- comments first -->

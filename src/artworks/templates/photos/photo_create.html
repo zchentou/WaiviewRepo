@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load artworks_extras %}
+{% block content %}
+<div>
+  <form method="POST" enctype='multipart/form-data'> {% csrf_token %}
+    <div class='form-group'>
+      <h4>Your Image/Video</h4>
+      <p class='lead'> Post either a picture or video (if you would like to post both, posting separately will allow posts to stay organized). </p>
+      <p class='lead'> The available subcategories for each topic are: </p>
+      <div class="row">
+        {% for topic in request|all_topics %}
+        <div class="container mr-auto col-md-4">
+          <h2>{{ topic }}: </h2>
+          <ul class='lead'>
+            {% for type in topic|return_all_types_for_topic %}
+              <li> {{ type }} </li>
+            {% endfor %}
+          </ul>
+        </div>
+        {% endfor %}
+      </div>
+        {{ form|crispy }}
+      <button type="submit" name="button" class="btn btn-outline-primary">Post</button>
+      <hr>
+      <!-- <p><em>*** If after you hit post, your screen takes a long time to redirect and refresh, you are safe to leave the page, you will not lose any data and your upload will continue. (This loading is just because your media is in the process of uploading. However, even if you leave the page and you go to another part of our website or leave the website completely, the file will keep uploading.) </em></p> -->
+      <p><em>*** Some large video files and some video formats may not be supported on this website and may cause an error when being uploaded. If this is the case, you could compress your video before uploading it and try again. If a video is not playable, you can try and convert your video to another format and try again. Fixes to this inconveniences are being looked into. (These are also described on the home page and in the Terms and Conditions)</em></p>
+      </div>
+  </form>
+</div>
+
+{% endblock %}

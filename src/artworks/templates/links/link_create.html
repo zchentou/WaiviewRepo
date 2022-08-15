@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load artworks_extras %}
+{% block content %}
+<div>
+  <form method="POST" enctype='multipart/form-data'> {% csrf_token %}
+    <div class='form-group'>
+      <h4>Your Resource/Link</h4>
+      <p class='lead'> The available subcategories for each topic are: </p>
+      <div class="row">
+        {% for topic in request|all_topics %}
+        <div class="container mr-auto col-md-4">
+          <h2>{{ topic }}: </h2>
+          <ul class='lead'>
+            {% for type in topic|return_all_types_for_topic %}
+              <li> {{ type }} </li>
+            {% endfor %}
+          </ul>
+        </div>
+        {% endfor %}
+      </div>
+        {{ form|crispy }}
+      <button type="submit" name="button" class="btn btn-outline-primary">Post</button>
+      </div>
+  </form>
+</div>
+
+{% endblock %}

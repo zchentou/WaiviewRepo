@@ -1,0 +1,130 @@
+{% extends 'base.html' %}
+{% load stories_extras %}
+{% block content %}
+
+<!-- USE CARDS INSTEAD, MAKE A SQUARE OF 4 THINGS -->
+<div class="container">
+    <!-- maybe use cards instead -->
+    <div class="jumbotron bg-primary text-white w-100">
+      <h3 class='display-4'>Waiview welcomes you</h3>
+      <hr>
+      <p class='lead'>
+        Waiview empowers you to tell your story and share your perspective with as little or as much identification about you as you want; start today with just a username and password. Share a story, image/video, or resource and build connections with others you might not know who will enjoy your point of view. Join a wave of empathy, solidarity, and action that is needed to tackle the ever present issues present in our society. A diverse, roaring wave of people needed to build systemic change from the roots of our society, forming our culture, values, and interpersonal relationships. Listening to each others’ different ways of viewing issues and stories to open our eyes to the nature of inequities and injustice in our different communities and to understand the changes we want and how to achieve them.
+      </p>
+    </div>
+</div>
+
+<div class="container">
+  <div class='row mb-4'>
+    <div class="col-md-7 px-0">
+      <div class="card border-primary d-none d-sm-none d-md-block">
+        <div class="card-body text-primary">
+          <h4 class ='card-title'><a href="{% url 'story-list' 'everything' %}">Stories</a></h4>
+          <p class='card-text lead'>
+            Everyone’s perspective is invaluable and unique, including yours. A story can mean many things; here, you can share an experience, a reflection you’ve had, a conclusion you’ve reached, and much more. Each plays a different part in growing the wave of empathy that is needed today. Share long or short stories to begin to speak to each other’s different ways of thinking (can post picture along with a story too). Write about whatever you want, whether that is what you are passionate about or what is meaningful to you. Read others’ posts, comment and reply to develop your perspective by interacting with posts you relate to and others you might not have known about. Communicate directly to others; ever wanted to thank frontline workers directly for sacrificing so much during the COVID-19 pandemic?  This platform gives you the opportunity to do just that
+            <a href="{% url 'story-issue-category' request|return_COVID_issue request|return_Frontline_Workers 'everything' %}">
+              <em><strong>here</strong></em>.
+            </a>
+          </p>
+        </div>
+      </div>
+      <div class="card border-primary d-md-none mb-3">
+        <div class="card-body text-primary">
+          <h4 class ='card-title'><a href="{% url 'story-list' 'everything' %}">Stories</a></h4>
+          <p class='card-text lead'>
+            Everyone’s perspective is invaluable and unique, including yours. A story can mean many things; here, you can share an experience, a reflection you’ve had, a conclusion you’ve reached, and much more. Each plays a different part in growing the wave of empathy that is needed today. Share long or short stories to begin to speak to each other’s different ways of thinking (can post picture along with a story too). Write about whatever you want, whether that is what you are passionate about or what is meaningful to you. Read others’ posts, comment and reply to develop your perspective by interacting with posts you relate to and others you might not have known about. Communicate directly to others; ever wanted to thank to frontline workers directly for sacrificing so much during the COVID-19 pandemic?  This platform gives you the opportunity to do just that
+            <a href="{% url 'story-issue-category' request|return_COVID_issue request|return_Frontline_Workers 'everything' %}">
+              <em><strong>here</strong></em>.
+            </a>
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-5">
+      <figure class="figure">
+        <img src='https://humanity-united-files.s3.us-east-2.amazonaws.com/home/Writing_Story_compressed.jpg' class='figure-img img-fluid rounded'>
+      </figure>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-5 d-none d-sm-none d-md-block">
+      <figure class="figure">
+        <img src='https://humanity-united-files.s3.us-east-2.amazonaws.com/home/BLM_Protest_compressed.jpg' class='figure-img img-fluid rounded'>
+      </figure>
+    </div>
+    <div class="col-md-7 px-0">
+      <div class="card border-primary">
+        <div class="card-body text-primary">
+          <h4 class ='card-title'><a href="{% url 'photo-list-media_type' 'picture' %}">Images and Videos</a></h4>
+          <p class='card-text lead'>
+            For certain situations and purposes, media is able to convey messages more powerfully or differently than words can, shining another angle on a topic or issue. Share your images and videos that relate to various different topics, voice and depict your thoughts. Again, you can comment and reply to continue the conversation and expand the discourse.
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-5 d-md-none">
+      <figure class="figure mt-3">
+        <img src='https://humanity-united-files.s3.us-east-2.amazonaws.com/home/BLM_Protest_compressed.jpg' class='figure-img img-fluid rounded'>
+      </figure>
+    </div>
+  </div>
+
+  <div class='row mb-5'>
+    <div class="col-md-7 px-0">
+      <div class="card border-primary d-none d-sm-none d-md-block">
+        <div class="card-body text-primary mb-3">
+          <h4 class ='card-title'><a href="{% url 'link-list' 'date-created' %}">Resources and Links</a></h4>
+          <p class='card-text lead'>
+            Share any resource pertaining to a topic. Resources take many forms; while one person may read a resonating book expanding their way of thinking, someone else may find an organization’s mission compelling. Resources provide us with both the means to become more educated about issues and the various paths that can be undertaken to effect change in communities. Empathy and educating oneself on the issues of the day are critical first-steps to change. Yet this cannot be the end-all-be-all. That empathy must be fueled into the capacity to achieve tangible reform. This section underscores the importance of the complementary nature of education and action by allowing you to share different types of resources.
+          </p>
+        </div>
+      </div>
+      <div class="card border-primary d-md-none mb-3">
+        <div class="card-body text-primary mb-3">
+          <h4 class ='card-title'><a href="{% url 'link-list' 'date-created' %}">Resources and Links</a></h4>
+          <p class='card-text lead'>
+            Share any resource pertaining to a topic. Resources take many forms; while one person may read a resonating book expanding their way of thinking, someone else may find an organization’s mission compelling. Resources provide us with both the means to become more educated about issues and the various paths that can be undertaken to effect change in communities. Empathy and educating oneself on the issues of the day are critical first-steps to change. Yet this cannot be the end-all-be-all. That empathy must be fueled into the capacity to achieve tangible reform. This section underscores the importance of the complementary nature of education and action by allowing you to share different types of resources.
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-5">
+      <figure class="figure">
+        <img src='https://humanity-united-files.s3.us-east-2.amazonaws.com/home/Vote_compressed.jpg' class='figure-img img-fluid rounded'>
+      </figure>
+    </div>
+  </div>
+</div>
+
+  <div class="card text-white bg-primary mb-3">
+    <div class="card-header">Note from creator of the website Waiview:</div>
+    <div class="card-body">
+      <p class='card-text'>
+        This website centralizes our experiences and information/resources that relate to different topics, but it is only possible because of people like you who are willing to participate in the discussion, listen to others, and share important insights. I hope that this website offers you a flexible outlet to share and fully own your thoughts and stories—an empathetic environment with complete freedom on how much you want to reveal about yourself and what format you want to write/share in. As stated before, you only need a username and password to sign up — profile information like your email and name are completely optional. With an account, you can comment and reply to others’ stories, images/videos, and resources/links. I hope this fosters an empathetic discussion between people across the world you might relate to and others that you might not, so that you can both feel more comfortable and safe with your own thoughts and feelings, in the comfort that you are not alone with them, and so you can also have a different insight into others’ experiences, see topics from a different angle. Feel free to email me with any feedback or suggestions you have for the website, such as any changes you feel would be appropriate (waiview1@gmail.com).
+      </p>
+    </div>
+  </div>
+
+  <div class="card text-white bg-primary mb-3">
+    <div class="card-header">Other Important Information:</div>
+    <div class="card-body">
+      <p class='card-text'>
+        The default timezone set for the posts on this website if you do not have an account is Eastern Time (ET). Also, the default view for the stories on this website if you do not have an account is seeing two stories per row (in other words, there are two columns of posts). When you have an account, both of these settings can be switched. You can pick a different timezone or to have one story per row (in other words, one column of posts).
+      </p>
+      <p class='card-text'>
+        I am working on making all video formats operational in the video section, but there may currently be some issues with some video formats. If this is the case, you can email and contact me as well (waiview1@gmail.com), and we can try to solve the problem, such as converting the video into a different format. Furthermore, some large videos may not be supported and may cause an error when being uploaded. If this is the case, you can compress the video before uploading or again contact me by email to search for a solution. I am looking for a fix for both of these inconveniences.
+      </p>
+      <p class='card-text'>
+        With an account comes the ability to post stories, images/videos, and resources/links. Please rest assured that you can see all your posts in your profile section and either update them or delete them from this website (removing videos and images from this website will also remove them from the external storage service where they are stored). Read more in the Terms and Conditions and Privacy Policy listed in the footer (bottom of the page) of the website.
+      </p>
+    </div>
+  </div>
+
+  <p><em>This website was made using different guides and different open source projects. <a href="{% url 'acknowledgments' %}">View my acknowledgments section if you would like to read more.</a></em></p>
+  <p>&copy; 2020 Zacharie Chentouf</p>
+
+
+
+
+{% endblock %}

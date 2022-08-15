@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load artworks_extras %}
+{% block content %}
+<div>
+  <form method="POST"> {% csrf_token %}
+    <div class='form-group'>
+      <h4>Are you sure you want to delete your reply "{{ object.text }}"?</h4>
+        {{ form|crispy }}
+      <button type="submit" name="button" class="btn btn-danger">Yes</button>
+      <a href="{% url 'photo-detail' object|get_photo_id_from_reply %}" class='text-white btn btn-primary'>Cancel</a>
+  </form>
+</div>
+
+{% endblock %}

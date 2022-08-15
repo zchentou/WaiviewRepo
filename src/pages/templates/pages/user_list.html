@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="">
+  {% for object in object_list %}
+    <div class="col mb-4">
+      <div class='card mb-4 h-100'>
+        <div class="card-header pt-3">
+          <h4><a href="{% url 'profile' object %}" class='text-primary'>{{ object.username }}</a><img src="{{ object.profile.picture.url }}" class='rounded-circle for-story-profile-pics ml-2'></h4>
+        </div>
+        <div class="card-body">
+          <h5 class='mb-0'>
+            <small>
+              {% if object.profile.first_name and object.profile.last_name %}
+                Name: {{ object.profile.first_name}} {{object.profile.last_name }}
+              {% elif object.profile.first_name %}
+                {{ object.profile.first_name }}
+              {% elif object.profile.last_name %}
+                {{ object.profile.last_name }}
+              {% else %}
+               Name: N/A
+              {% endif %}
+            </small>
+          </h5>
+        </div>
+      </div>
+    </div>
+  {% endfor %}
+</div>
+
+{% endblock %}
